@@ -26,8 +26,9 @@ export const listDatasets = () => request<Dataset[]>("/instances");
 export const getDataset = (id: string) => request<Dataset & { instance: Instance }>(`/instances/${id}`);
 export const listRuns = () => request<Run[]>("/runs");
 export const getRun = (id: string) => request<Run>(`/runs/${id}`);
-export const createRun = (datasetId: string, scenario: string) => request<Run>("/runs", {
-  method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ dataset_id: datasetId, scenario }),
+export const createRun = (datasetId: string, scenario: string, bufferGranularity: string) => request<Run>("/runs", {
+  method: "POST", headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ dataset_id: datasetId, scenario, buffer_granularity: bufferGranularity }),
 });
 export function uploadDataset(name: string, files: File[]) {
   const body = new FormData();

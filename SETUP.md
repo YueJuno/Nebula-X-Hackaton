@@ -166,7 +166,7 @@ After pulling these scheduling changes, rerun `python -m app.db.init_db` using t
 1. Sign in and select the eight CSV files from `01_data/` (or a new instance using the same schema).
 2. Choose scenario A, B, or C and click **Schedule scenario**.
 3. The worker loads the instance, calculates spatial footprints, builds and solves the CP-SAT model, and exports the three submission CSVs.
-4. Download the report and submission ZIP. A run is `completed` when an external reference validator confirms it, or `needs_validation` when the solver output is ready but that validator is unavailable.
+4. Download the report and submission ZIP. A run is `completed` when the built-in validator finds no hard violations, or `needs_validation` when it finds some; the CSVs stay downloadable either way so the pinpoints can be inspected. See section 8.
 
 Inputs, run metadata, and reports are stored in PostgreSQL and belong to the signed-in user. Current upload limits are 2 MB per CSV, 1,000 activities/locations, 260 weeks, and a bounded model size; oversized instances are rejected explicitly.
 
@@ -188,11 +188,127 @@ backend/scheduler/constraints/eclo.py
 
 Together they enforce workload delivery, release dates and predecessors; safety closures and buffers; possession mixes, co-sharing and capacity; weekly allocations and workfronts; deadlines, lateness and ECLO policy rules.
 
-The reference validator is not included in the supplied files. When available, configure `VALIDATOR_COMMAND` in `backend/.env` as a JSON array of executable/arguments using its documented CLI syntax. The adapter replaces `{instance_dir}` and `{submission_dir}` placeholders with temporary input/output directories, executes without a shell, and expects a JSON report on stdout with a boolean `feasible` field. Recreate/restart services after changing this setting.
+## 8. Validating a submission
 
-CSV exports and ZIP packaging are available for both validated and unvalidated solver output. When no reference validator is configured, the run is marked `needs_validation` and the UI makes that limitation explicit while still allowing the CSVs to be downloaded for external validation.
+The official scoring program is not included in the challenge pack, so the
+repository ships its own implementation of the PS1 section 2.4 hard rules and
+the section 2.7 report. Every solve is self-checked before its CSVs are offered
+for download, and any submission folder can be checked on its own:
 
-Spatial footprints currently assume a live closure reaching either interchange hub or its connecting sector triggers the cross-line closure. This interpretation and completion-date conventions still need checking against the reference validator when it becomes available.
+```powershell
+.\.venv\Scripts\python.exe -m scheduler ..\01_data --check ..\04_solver_outputs\scenario_A
+```
+
+`--check` needs no OR-Tools and exits `0` when feasible, `2` otherwise, so it
+drops straight into CI. It prints the full section 2.7 report plus a one-line
+verdict such as `INFEASIBLE (week granularity): closure=65, co_share=14`.
+
+| Module | Responsibility |
+| --- | --- |
+| `backend/scheduler/submission.py` | Parses the three submission CSVs; rejects a mixed-scenario `RESULTS.csv` |
+| `backend/scheduler/rules.py` | The hard-rule checks, one function per section 2.4 rule |
+| `backend/scheduler/scoring.py` | Soft scores and the section 2.5 objective |
+| `backend/scheduler/validator.py` | Assembles the report; adapts an external validator when configured |
+
+Rule tags: `workload`, `start_date`, `closure`, `mix`, `co_share`, `allocation`,
+`workfront`, `eclo`, `eclo_window`, `capacity`, `planned_date`, `predecessor`,
+`occupancy`, `results`, `format`.
+
+### Buffer granularity
+
+Section 2.4 rule 3 admits two readings, and no reference binary exists to settle
+which one scoring uses, so `--granularity` selects it — for solving as well as
+checking. **`week` is the default**, because a week-strict schedule satisfies
+both readings; the web app exposes the same choice per run.
+
+Measured on the public instance:
+
+| Scenario | Week-strict objective | Per-possession objective | Feasible under both? |
+| --- | ---: | ---: | --- |
+| A | 123.2 | 25.2 | week-strict only |
+| B | 40.0 | 30.0 | week-strict only |
+| C | 36.1 | 25.2 | week-strict only |
+
+Week-strict costs quality but is immune to however scoring resolves the rule;
+the per-possession model scores better and produces 43-67 `closure` violations
+if the strict reading is the one used. Since feasibility is a gate and score is
+a margin, the repository ships week-strict and keeps the looser model available
+for comparison. No Priority-1 contract overruns under either.
+
+The two readings:
+
+- `week` (default) — any two activities holding an access in the same week
+  conflict when one's occupied span falls inside the other's closure. This is
+  the conservative reading and matches the week-granular pinpoint in the
+  section 2.7 example. Neither submitted field orders nights across contracts:
+  `access_night` is explicitly local to a contract+type, and `co_share_group`
+  is an arbitrary label.
+- `possession` — only activities sharing a `co_share_group` in that week are
+  treated as concurrent, reading rule 5's "separate possessions on separate
+  nights" as a network-wide guarantee.
+
+Co-sharing exempts a pair under either reading. Run both before submitting: a
+schedule that is feasible only under `possession` is betting on the looser
+interpretation.
+
+Adding a run's interpretation to an existing database needs one statement, since
+`python -m app.db.init_db` only creates missing tables:
+
+```sql
+ALTER TABLE scheduling_runs ADD COLUMN buffer_granularity VARCHAR(16) DEFAULT 'week';
+```
+
+## 9. Explaining a schedule
+
+Producing a schedule is not the same as defending one. Two layers, separated by
+how expensive they are:
+
+```powershell
+.\.venv\Scripts\python.exe -m scheduler ..\01_data --scenario A --explain
+.\.venv\Scripts\python.exe -m scheduler ..\01_data --scenario A --unlocks 4
+```
+
+`--explain` attributes every overrunning activity to the weeks it could have
+used but did not. It reads the solved schedule only, so it is cheap enough to
+run inside a web request and is attached to every API run as
+`report.explanation`. Blocking factors, in the order they dominate:
+
+| Factor | Meaning |
+| --- | --- |
+| `window` | Planned start to deadline is shorter than the activity's workload, and an activity may take only one access-night a week. Structural — no contention relief can recover it. |
+| `predecessor` | The preceding activity had not finished. |
+| `allocation` | The contract's weekly access-night budget was already spent. |
+| `workfront` | The contract held nights that week but had no free crew. |
+| `capacity` | Locations on the activity's span were at nominal supply. |
+
+`--unlocks N` goes further and re-solves the instance once per candidate lever,
+ranking them by objective bought back. Levers are operational rather than
+mathematical — one more access-night a week, one more workfront, one more
+possession at a location, or an earlier mobilisation date — so each result is
+something a planner can actually negotiate. Candidates are drawn from the
+blocking factors and weighted by the delay cost they would relieve, so only
+levers with evidence behind them are tried. This costs one solve per lever, so
+it is a CLI/offline tool, not a request handler.
+
+On the public instance, Scenario A's entire 25.2 objective is two structurally
+impossible activities: `A036` needs 7 access-nights inside a 5-week window and
+`A059` needs 7 inside 6 weeks. The lever sweep confirms it — pulling their
+start dates forward recovers 18.2 and 7.0 respectively, while extra weekly
+access buys nothing. This is also why Scenario B spends exactly 6 ECLO nights
+(4 on `A036`, 2 on `A059`): that is the minimum needed to compress 7 units of
+work into those windows at the 1.5x ECLO yield.
+
+### External cross-check
+
+When the official validator becomes available, configure `VALIDATOR_COMMAND` in
+`backend/.env` as a JSON array of executable/arguments. The adapter replaces
+`{instance_dir}` and `{submission_dir}` placeholders with temporary
+directories, executes without a shell, and expects a JSON report on stdout with
+a boolean `feasible` field. Its verdict appears alongside the built-in one, and
+a run reaches `completed` only when the built-in validator passes and the
+external one does not contradict it.
+
+Spatial footprints currently assume a live closure reaching either interchange hub or its connecting sector triggers the cross-line closure. This interpretation and completion-date conventions still need checking against the official validator when it becomes available.
 
 ## 4. Verify the setup
 
@@ -250,6 +366,6 @@ Backend authentication tests use an isolated SQLite test database by default; ap
 | Account already exists | Use sign-in or a different email. |
 | Changes are not reflected | Verify you are editing this repository and viewing the correct port; recreate services for `.env` changes. |
 | A run stays queued | Start the local worker or check `docker compose logs worker`. |
-| A run ends `needs_validation` | The solver finished, but no reference validator is configured. Download the CSVs and validate externally, or configure `VALIDATOR_COMMAND`. |
+| A run ends `needs_validation` | The solver finished but the built-in validator found hard violations. Open the feasibility panel for the per-rule counts and pinpoints, or re-check the downloaded CSVs with `-m scheduler ..\01_data --check <dir>`. |
 
 The application supports health checks, authentication, CSV upload/validation, saved datasets, queued solver jobs, network previews, run history, scenario-aware CP-SAT optimization, schedule metrics, CSV/ZIP export, and optional reference-validator integration.

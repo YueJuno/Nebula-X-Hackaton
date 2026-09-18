@@ -25,19 +25,22 @@ def possession_group_limits(instance, policy):
     )
 
 
-def build_model(instance, scenario, max_groups=None):
+def build_model(instance, scenario, max_groups=None, buffer_granularity="week"):
     model = cp_model.CpModel()
     footprints = calculate_footprints(instance)
-    policy = get_policy(scenario)
+    policy = get_policy(scenario, buffer_granularity)
     variables = create_variables(model, instance, footprints, policy, max_groups)
     set_objective(model, variables, instance, policy)
     return model, variables, footprints, policy
 
 
-def prepare(instance, scenario):
-    policy = get_policy(scenario)
+def prepare(instance, scenario, buffer_granularity="week"):
+    policy = get_policy(scenario, buffer_granularity)
     model, _variables, footprints, policy = build_model(
-        instance, scenario, possession_group_limits(instance, policy)[0]
+        instance,
+        scenario,
+        possession_group_limits(instance, policy)[0],
+        buffer_granularity,
     )
     return {
         "summary": instance.summary(),
@@ -49,17 +52,17 @@ def prepare(instance, scenario):
     }
 
 
-def solve(instance, scenario, time_limit_seconds=60):
+def solve(instance, scenario, time_limit_seconds=60, buffer_granularity="week"):
     # Gate before any search so unconstrained assignments cannot be mistaken for a schedule.
     if missing := missing_constraints():
         raise NotImplementedError("Missing railway constraints: " + ", ".join(missing))
-    policy = get_policy(scenario)
+    policy = get_policy(scenario, buffer_granularity)
     group_limits = possession_group_limits(instance, policy)
 
     last_status = None
     for index, group_limit in enumerate(group_limits):
         model, variables, footprints, policy = build_model(
-            instance, scenario, group_limit
+            instance, scenario, group_limit, buffer_granularity
         )
         apply_constraints(model, variables, instance, footprints, policy)
         solver = cp_model.CpSolver()

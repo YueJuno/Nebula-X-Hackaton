@@ -53,7 +53,10 @@ def create_run(payload: RunRequest, user: UserDependency, db: DatabaseDependency
             detail="Wait for your existing runs to finish before starting another.",
         )
     run = Run(
-        owner_id=user.id, dataset_id=payload.dataset_id, scenario=payload.scenario
+        owner_id=user.id,
+        dataset_id=payload.dataset_id,
+        scenario=payload.scenario,
+        buffer_granularity=payload.buffer_granularity,
     )
     db.add(run)
     db.commit()

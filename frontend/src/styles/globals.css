@@ -62,3 +62,15 @@ th { background: #eff4fb; }
   .scenarios { grid-template-columns: 1fr; }
   .shell { padding: 24px 16px; }
 }
+
+.validation { border: 1px solid #d4dce8; border-radius: 10px; padding: 1rem; margin: 1rem 0; }
+.validation .panel-heading { margin-bottom: .5rem; }
+.violation-summary { width: 100%; margin: .75rem 0; }
+.violation-summary td code { color: #6b7a90; font-size: .85em; }
+.violation-list { margin: 0; padding-left: 1.1rem; max-height: 22rem; overflow-y: auto; }
+.violation-list li { margin: .35rem 0; font-size: .9rem; line-height: 1.4; }
+.violation-list code { background: #fdeaea; color: #a32020; padding: 0 .3rem; border-radius: 3px; }
+.explanation-detail { border-top: 1px solid #e3e9f1; margin-top: .75rem; padding-top: .75rem; }
+.explanation-detail .violation-list code { background: #eef3fb; color: #23486f; }
+button.linklike { background: none; border: 0; padding: 0; color: #23486f; font: inherit;
+  text-decoration: underline; cursor: pointer; }

@@ -12,12 +12,21 @@ const scenarios = [
   { id: "C", title: "Balanced planning", detail: "Balance delays, limited extra access, and ECLO." },
 ] as const;
 
+// Section 2.4 rule 3 does not say whether two activities in separate possessions
+// can share a night. A week-strict schedule satisfies both readings, so it is
+// the default; the looser reading is offered for comparison.
+const readings = [
+  { id: "week", title: "Week-strict buffers", detail: "Safe under either reading of rule 3. Recommended for submission." },
+  { id: "possession", title: "Per-possession buffers", detail: "Assumes separate possessions are separate nights. Scores better, but only if that reading is right." },
+] as const;
+
 export default function App() {
   const [connection, setConnection] = useState<Connection>("checking");
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
   const [scenario, setScenario] = useState<string>("A");
   const [user, setUser] = useState<User | null>(null);
+  const [granularity, setGranularity] = useState<string>("week");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -80,7 +89,25 @@ export default function App() {
         </div>
         <p className="note">Scenario {scenario} selected for the next run.</p>
       </section>
-      <PlannerPanel user={user} scenario={scenario} />
+
+      <section className="panel" aria-labelledby="reading-heading">
+        <h2 id="reading-heading">Buffer rule interpretation</h2>
+        <p className="intro">
+          Rule 3 does not state whether activities in separate possessions may share a night.
+          Week-strict output is feasible under both readings; the per-possession model is not.
+        </p>
+        <div className="scenarios" role="group" aria-label="Choose a buffer reading">
+          {readings.map(item => (
+            <button key={item.id} className="scenario" aria-pressed={granularity === item.id}
+              onClick={() => setGranularity(item.id)}>
+              <span className="scenario-id">{item.id === "week" ? "Strict" : "Loose"}</span>
+              <strong>{item.title}</strong>
+              <span>{item.detail}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+      <PlannerPanel user={user} scenario={scenario} granularity={granularity} />
     </main>
   );
 }
