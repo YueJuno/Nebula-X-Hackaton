@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "railway-track-access-backend"
+version = "0.1.0"
+description = "Railway track access scheduling backend"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "pydantic-settings",
+  "python-multipart",
+  "PyJWT",
+  "bcrypt",
+  "redis",
+  "sqlalchemy",
+  "psycopg[binary]",
+  "alembic",
+  "pandas",
+  "ortools",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "httpx", "ruff"]
+
+[tool.setuptools.packages.find]
+include = ["app*", "scheduler*"]

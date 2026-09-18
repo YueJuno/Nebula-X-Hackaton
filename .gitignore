@@ -1,0 +1,20 @@
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# Frontend
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Generated runtime files
+runtime/
+*.log
