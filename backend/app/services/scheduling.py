@@ -6,6 +6,7 @@ from tempfile import TemporaryDirectory
 from scheduler.constraints import missing_constraints
 from scheduler.domain import Instance
 from scheduler.exporter import export_files, zip_files
+from scheduler.results import summarize_schedule
 from scheduler.solver import prepare, solve
 from scheduler.validator import validate_submission
 
@@ -29,6 +30,7 @@ def execute_run(
         }
     schedule = solve(instance, scenario, time_limit_seconds)
     exports = export_files(instance, schedule, scenario)
+    report["solution"] = summarize_schedule(instance, schedule)
     with TemporaryDirectory(prefix="trackaccess-") as directory:
         inputs, outputs = Path(directory) / "instance", Path(directory) / "submission"
         inputs.mkdir()
@@ -49,8 +51,8 @@ def execute_run(
         "status": "completed" if verified else "needs_validation",
         "message": "Reference-validated schedule ready."
         if verified
-        else "Solver output is not reference-validated; submission download is disabled.",
+        else "Solver output is ready for download but has not been checked by the reference validator.",
         "report": report,
         "schedule": schedule.model_dump(),
-        "submission_zip": zip_files(exports) if verified else None,
+        "submission_zip": zip_files(exports),
     }

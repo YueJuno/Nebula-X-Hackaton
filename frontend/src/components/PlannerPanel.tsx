@@ -91,7 +91,7 @@ export default function PlannerPanel({ user, scenario }: { user: User | null; sc
     {capabilities && !capabilities.can_schedule && <p className="notice" role="status">
       Data upload and model preparation are available. Scheduling awaits the railway constraints: {capabilities.missing_constraints.join(", ")}.
     </p>}
-    {!user ? <p>Sign in to upload datasets and save preparation runs.</p> : <>
+    {!user ? <p>Sign in to upload datasets and save scheduling runs.</p> : <>
       <form className="upload-form" onSubmit={upload}>
         <label>Dataset name<input value={name} maxLength={128} required disabled={busy} onChange={event => setName(event.target.value)} /></label>
         <label>Eight instance CSVs<input key={`${user.id}:${datasets.length}`} type="file" accept=".csv" multiple required disabled={busy}
@@ -117,7 +117,14 @@ export default function PlannerPanel({ user, scenario }: { user: User | null; sc
         <p>{activeRun.message || "Waiting for a scheduling worker. Start the worker if this remains queued."}</p>
         {activeRun.report && <>
           <p className="note">{activeRun.report.notice}</p>
-          <button onClick={() => download("report")}>Download preparation / validation report</button>
+          {activeRun.report.solution && <div className="metrics" aria-label="Schedule summary">
+            <span><strong>{activeRun.report.solution.objective_score}</strong> objective</span>
+            <span><strong>{activeRun.report.solution.nights_scheduled}</strong> access rows</span>
+            <span><strong>{activeRun.report.solution.overrun_days_total}</strong> overrun days</span>
+            <span><strong>{activeRun.report.solution.excess_access_nights_total}</strong> extra possessions</span>
+            <span><strong>{activeRun.report.solution.eclo_nights_total}</strong> ECLO nights</span>
+          </div>}
+          <button onClick={() => download("report")}>Download solve / validation report</button>
           <details><summary>Model statistics</summary><pre>{activeRun.report.model_stats}</pre></details>
           {activeRun.report.validation && <div><h4>Reference validation: {activeRun.report.validation.status}</h4>
             <p>Feasible: {String(activeRun.report.validation.feasible)}</p>
@@ -125,7 +132,8 @@ export default function PlannerPanel({ user, scenario }: { user: User | null; sc
             {activeRun.report.validation.soft_scores && <pre>{JSON.stringify(activeRun.report.validation.soft_scores, null, 2)}</pre>}
           </div>}
         </>}
-        {activeRun.status === "completed" && <button onClick={() => download("submission")}>Download submission CSVs</button>}
+        {["completed", "needs_validation"].includes(activeRun.status) &&
+          <button onClick={() => download("submission")}>Download submission CSVs</button>}
         {activeRun.schedule && instance && activeRun.dataset_id === selected && <ScheduleTimeline instance={instance} schedule={activeRun.schedule} />}
       </div>}
       {instance && <>

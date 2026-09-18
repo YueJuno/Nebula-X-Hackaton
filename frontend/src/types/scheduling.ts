@@ -21,6 +21,12 @@ export interface Footprint {
 export interface PreparationReport {
   missing_constraints: string[]; model_stats: string; footprints: Record<string, Footprint>;
   notice: string;
+  solution?: {
+    solver_status: string; objective_score: number; nights_scheduled: number;
+    eclo_nights_total: number; excess_access_nights_total: number;
+    contracts_overrunning: number; overrun_days_total: number;
+    priority_weighted_overrun: number;
+  };
   validation?: { status: string; feasible: boolean | null; hard_violations?: { rule: string; detail: string }[]; soft_scores?: Record<string, unknown> };
 }
 export interface Schedule {

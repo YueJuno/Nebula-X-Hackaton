@@ -6,7 +6,7 @@ All terminal examples use Windows PowerShell. Start in the repository root (`Neb
 
 ## 1. Configure environment files
 
-Keep backend and frontend configuration separate. Create the following files if they do not exist. If they already exist, update the relevant settings without replacing your existing credentials.
+Keep backend and frontend configuration separate. Copy `backend/.env.example` to `backend/.env` and `frontend/.env.example` to `frontend/.env`, then replace the placeholders. If the files already exist, update the relevant settings without replacing your existing credentials.
 
 ### Backend: `backend/.env`
 
@@ -161,22 +161,22 @@ Docker Compose starts a worker automatically. Each worker processes one job at a
 
 After pulling these scheduling changes, rerun `python -m app.db.init_db` using the local virtual environment or the Docker command above. It creates the new `datasets` and `scheduling_runs` tables as well as `users`.
 
-## Scheduling preparation and constraint extension points
+## Scheduling workflow
 
 1. Sign in and select the eight CSV files from `01_data/` (or a new instance using the same schema).
-2. Choose scenario A, B, or C and click **Prepare scenario**.
-3. The worker loads the instance, calculates spatial footprints, builds decision variables/objective, and saves a preparation report.
-4. The run ends with status `blocked` while railway constraints are missing. This is expected, not a valid possession schedule.
+2. Choose scenario A, B, or C and click **Schedule scenario**.
+3. The worker loads the instance, calculates spatial footprints, builds and solves the CP-SAT model, and exports the three submission CSVs.
+4. Download the report and submission ZIP. A run is `completed` when an external reference validator confirms it, or `needs_validation` when the solver output is ready but that validator is unavailable.
 
 Inputs, run metadata, and reports are stored in PostgreSQL and belong to the signed-in user. Current upload limits are 2 MB per CSV, 1,000 activities/locations, 260 weeks, and a bounded model size; oversized instances are rejected explicitly.
 
-You can prepare the public dataset without the web application or database. From `backend/`:
+You can solve the public dataset without the web application or database. From `backend/`:
 
 ```powershell
-.\.venv\Scripts\python.exe -m scheduler ..\01_data --scenario A --output ..\runtime\preparation-A.json
+.\.venv\Scripts\python.exe -m scheduler ..\01_data --scenario A --submission-dir ..\04_solver_outputs\scenario_A --output ..\04_solver_outputs\scenario_A\report.json
 ```
 
-The following modules intentionally contain no railway constraint implementations:
+The CP-SAT formulation is split into five constraint modules:
 
 ```text
 backend/scheduler/constraints/workload.py
@@ -186,11 +186,11 @@ backend/scheduler/constraints/contracts.py
 backend/scheduler/constraints/eclo.py
 ```
 
-Each provides `add_constraints(model, variables, instance, footprints, policy)`. Implement its rules and accounting relationships before setting its `IMPLEMENTED` flag to `True`. In particular, link the ECLO flags, possession labels, activity lateness, and location excess variables to actual accesses; the objective does not enforce those relationships.
+Together they enforce workload delivery, release dates and predecessors; safety closures and buffers; possession mixes, co-sharing and capacity; weekly allocations and workfronts; deadlines, lateness and ECLO policy rules.
 
 The reference validator is not included in the supplied files. When available, configure `VALIDATOR_COMMAND` in `backend/.env` as a JSON array of executable/arguments using its documented CLI syntax. The adapter replaces `{instance_dir}` and `{submission_dir}` placeholders with temporary input/output directories, executes without a shell, and expects a JSON report on stdout with a boolean `feasible` field. Recreate/restart services after changing this setting.
 
-CSV exports and ZIP packaging are implemented for future solver output. A submission download is enabled only after the configured reference validator confirms feasibility. Otherwise the run is `needs_validation`, with no downloadable submission ZIP. No search or submission export occurs while constraints remain missing.
+CSV exports and ZIP packaging are available for both validated and unvalidated solver output. When no reference validator is configured, the run is marked `needs_validation` and the UI makes that limitation explicit while still allowing the CSVs to be downloaded for external validation.
 
 Spatial footprints currently assume a live closure reaching either interchange hub or its connecting sector triggers the cross-line closure. This interpretation and completion-date conventions still need checking against the reference validator when it becomes available.
 
@@ -250,6 +250,6 @@ Backend authentication tests use an isolated SQLite test database by default; ap
 | Account already exists | Use sign-in or a different email. |
 | Changes are not reflected | Verify you are editing this repository and viewing the correct port; recreate services for `.env` changes. |
 | A run stays queued | Start the local worker or check `docker compose logs worker`. |
-| A run ends blocked | Expected until all five railway constraint modules are implemented. |
+| A run ends `needs_validation` | The solver finished, but no reference validator is configured. Download the CSVs and validate externally, or configure `VALIDATOR_COMMAND`. |
 
-The current application supports health checks, authentication, CSV upload/validation, saved datasets, queued preparation jobs, network previews, run history, and reports. Solver orchestration, scoring expressions, CSV export, and validator integration are implemented, but railway constraints are deliberately pending and no feasible scheduling claim is made.
+The application supports health checks, authentication, CSV upload/validation, saved datasets, queued solver jobs, network previews, run history, scenario-aware CP-SAT optimization, schedule metrics, CSV/ZIP export, and optional reference-validator integration.

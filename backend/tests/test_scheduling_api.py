@@ -75,13 +75,13 @@ def test_upload_prepare_persist_and_owner_isolation(client_context):
     run = run_response.json()
     assert process_next(engine)
     final = client.get(f"/api/runs/{run['id']}", headers=owner).json()
-    assert final["status"] == "blocked" and final["schedule"] is None
+    assert final["status"] == "needs_validation" and final["schedule"] is not None
     assert final["report"]["policy"]["scenario"] == "B"
     assert client.get(f"/api/runs/{run['id']}", headers=other).status_code == 404
     assert client.get(f"/api/runs/{run['id']}/report", headers=owner).status_code == 200
     assert (
         client.get(f"/api/runs/{run['id']}/submission", headers=owner).status_code
-        == 409
+        == 200
     )
     assert not process_next(engine)
 
@@ -96,7 +96,7 @@ def test_authentication_and_invalid_upload(client_context):
     )
     assert response.status_code == 422
     assert client.get("/api/instances", headers=owner).json() == []
-    assert client.get("/api/runs/capabilities").json()["can_schedule"] is False
+    assert client.get("/api/runs/capabilities").json()["can_schedule"] is True
 
 
 def test_queue_quota(client_context):

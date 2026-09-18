@@ -11,7 +11,7 @@ from scheduler.objectives import delay_coefficient
 from scheduler.policies import get_policy
 from scheduler.results import Access, Schedule
 from scheduler.solver import solve
-from scheduler.topology import calculate_footprint
+from scheduler.topology import calculate_footprint, calculate_footprints
 from scheduler.validator import validate_submission
 
 PUBLIC = Path(__file__).resolve().parents[2] / "01_data"
@@ -76,23 +76,78 @@ def test_interchange_live_footprint_and_nonlive_isolation(public_instance):
     assert live.affected_lines == ["ALP", "BET"]
 
 
-def test_solver_is_gated_before_search(public_instance, monkeypatch):
-    from ortools.sat.python import cp_model
+def test_public_scenario_a_schedule_obeys_core_rules(public_instance):
+    schedule = solve(public_instance, "A", 30)
+    footprints = calculate_footprints(public_instance)
+    by_activity = {
+        activity.activity_id: [
+            access
+            for access in schedule.accesses
+            if access.activity_id == activity.activity_id
+        ]
+        for activity in public_instance.activities
+    }
 
-    def forbidden_search(*args, **kwargs):
-        pytest.fail("Solver search must not run without constraints")
+    assert schedule.solver_status in {"FEASIBLE", "OPTIMAL"}
+    assert set(by_activity) == {activity.activity_id for activity in public_instance.activities}
+    for activity in public_instance.activities:
+        accesses = by_activity[activity.activity_id]
+        assert 2 * len(accesses) + sum(access.eclo for access in accesses) >= 2 * activity.total_accesses
+        assert all(
+            public_instance.week_start(access.week) >= activity.planned_start_date
+            for access in accesses
+        )
+        assert all(
+            set(access.groups) == set(footprints[activity.activity_id].occupied)
+            for access in accesses
+        )
+        if activity.predecessor_activity_id:
+            assert max(
+                access.week for access in by_activity[activity.predecessor_activity_id]
+            ) < min(access.week for access in accesses)
 
-    monkeypatch.setattr(cp_model.CpSolver, "solve", forbidden_search)
-    with pytest.raises(NotImplementedError, match="Missing railway constraints"):
-        solve(public_instance, "A")
+    location = {item.location_id: item for item in public_instance.locations}
+    contracts = {
+        (item.contract_number, item.activity_type): item
+        for item in public_instance.contracts
+    }
+    activities = {item.activity_id: item for item in public_instance.activities}
+    possessions = {}
+    for access in schedule.accesses:
+        for location_id, group in access.groups.items():
+            possessions.setdefault((location_id, access.week, group), []).append(
+                access.activity_id
+            )
+    for members in possessions.values():
+        types = [
+            contracts[
+                (
+                    activities[activity_id].contract_number,
+                    activities[activity_id].activity_type,
+                )
+            ].access_type
+            for activity_id in members
+        ]
+        assert len(members) <= 4
+        assert types.count("PC") <= 1
+        assert "PM" not in types or len(types) == 1
+    for location_id, location_record in location.items():
+        for week in range(1, public_instance.horizon_weeks + 1):
+            groups = {
+                group
+                for (candidate, candidate_week, group) in possessions
+                if candidate == location_id and candidate_week == week
+            }
+            assert len(groups) <= location_record.supply_capacity
 
 
-def test_preparation_never_claims_feasibility(public_instance):
+def test_run_solves_but_requires_reference_validation(public_instance):
     result = execute_run(public_instance.model_dump(mode="json"), {}, "C")
-    assert result["status"] == "blocked"
-    assert result["schedule"] is None and result["submission_zip"] is None
+    assert result["status"] == "needs_validation"
+    assert result["schedule"] is not None and result["submission_zip"] is not None
     assert len(result["report"]["footprints"]) == 54
-    assert len(result["report"]["missing_constraints"]) == 5
+    assert result["report"]["missing_constraints"] == []
+    assert result["report"]["validation"]["status"] == "unavailable"
 
 
 def test_policy_and_priority_bands():

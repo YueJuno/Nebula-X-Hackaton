@@ -91,9 +91,9 @@ def download_report(run_id: str, user: UserDependency, db: DatabaseDependency):
 @router.get("/{run_id}/submission")
 def download_submission(run_id: str, user: UserDependency, db: DatabaseDependency):
     run = owned_run(db, run_id, user.id)
-    if run.status != "completed" or not run.submission_zip:
+    if run.status not in {"completed", "needs_validation"} or not run.submission_zip:
         raise HTTPException(
-            status_code=409, detail="No reference-validated submission is available."
+            status_code=409, detail="No solver submission is available."
         )
     return Response(
         run.submission_zip,
