@@ -215,7 +215,7 @@ Success prints `Connected: 1`. The `/api/health` endpoint checks API liveness on
 ### Signup and sign-in
 
 1. Open http://localhost:5173 and choose **Sign up**.
-2. Enter your email, a password of at least 8 characters, and the signup code `defaultcode` (or your configured value).
+2. Enter your email, a password of at least 8 characters, confirm the password, and enter the signup code `defaultcode` (or your configured value).
 3. Submit. Successful signup signs you in automatically.
 4. Sign out, then sign in with the same email and password.
 
@@ -240,11 +240,13 @@ Backend authentication tests use an isolated SQLite test database by default; ap
 | Symptom | What to check |
 | --- | --- |
 | Docker cannot connect to its engine | Start Docker Desktop and wait until the engine is ready. |
+| Image pull fails with `lookup registry-1.docker.io: no such host` | Docker cannot resolve Docker Hub. Check internet/DNS, restart Docker Desktop, and configure Docker Desktop's proxy settings if your network requires a proxy. Retry `docker pull node:22-alpine` before rebuilding. |
 | Port already allocated | Stop the existing process using port `5173` or `8000` before starting Compose. |
 | Frontend shows backend unavailable | Check backend logs and http://localhost:8000/api/health. |
 | Database unavailable / HTTP 503 | Check `DATABASE_URL`, the real Neon password, network access, and database initialization. |
 | Authentication not configured / HTTP 503 | Set a random `JWT_SECRET` of at least 32 characters and restart/recreate the backend. |
 | Invalid signup code | Enter the backend's current `SIGNUP_CODE`; recreate/restart the backend after changing it. |
+| Authentication request times out | Authentication waits up to 30 seconds. Verify API and Neon connectivity. If signup timed out after submission, try signing in before retrying signup because the account may already have been created. |
 | Account already exists | Use sign-in or a different email. |
 | Changes are not reflected | Verify you are editing this repository and viewing the correct port; recreate services for `.env` changes. |
 | A run stays queued | Start the local worker or check `docker compose logs worker`. |

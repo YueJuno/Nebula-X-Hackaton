@@ -1,15 +1,33 @@
 import { API_BASE_URL } from "./client";
 import type { AuthResponse, User } from "../types/auth";
 
-async function request<T>(path: string, options: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}/api/auth${path}`, {
-    ...options, signal: AbortSignal.timeout(10000),
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    const detail = typeof data.detail === "string" ? data.detail : "Check your email and password. Passwords require at least 8 characters and at most 72 UTF-8 bytes.";
-    throw new Error(detail);
+export class AuthApiError extends Error {
+  constructor(message: string, public status?: number) {
+    super(message);
+    this.name = "AuthApiError";
   }
+}
+
+async function request<T>(path: string, options: RequestInit): Promise<T> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/api/auth${path}`, {
+      ...options, signal: AbortSignal.timeout(30000),
+    });
+  } catch (cause) {
+    if (cause instanceof DOMException && ["TimeoutError", "AbortError"].includes(cause.name)) {
+      throw new AuthApiError("The server did not respond within 30 seconds. Check the backend and its Neon database connection. If signup was submitted, try signing in before submitting again.");
+    }
+    throw new AuthApiError("Could not reach the backend. Check that the API is running and the frontend API URL is correct.");
+  }
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    const detail = typeof data?.detail === "string" ? data.detail
+      : Array.isArray(data?.detail) ? data.detail.map((error: { msg?: string }) => error.msg || "Invalid input").join(" ")
+      : "Authentication failed. Please try again.";
+    throw new AuthApiError(detail, response.status);
+  }
+  if (!data) throw new AuthApiError("The backend returned an invalid response.");
   return data as T;
 }
 

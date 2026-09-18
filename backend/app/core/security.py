@@ -12,12 +12,15 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(password: str, password_hash: str) -> bool:
-    return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("ascii"))
+    try:
+        return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("ascii"))
+    except (ValueError, UnicodeError):
+        return False
 
 
 def signing_key() -> str:
     key = get_settings().jwt_secret.get_secret_value()
-    if len(key) < 32 or key.startswith("replace-"):
+    if len(key) < 32 or key.lower().startswith(("replace", "your_")):
         raise HTTPException(status_code=503, detail="Authentication is not configured. Set a random JWT_SECRET of at least 32 characters on the backend.")
     return key
 

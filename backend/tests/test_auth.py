@@ -128,3 +128,28 @@ def test_missing_signing_key_does_not_create_account(auth_client, monkeypatch):
     assert signup(client).status_code == 503
     with Session(engine) as db:
         assert db.scalar(select(User)) is None
+
+
+def test_database_outage_is_an_actionable_error(auth_client):
+    from sqlalchemy.exc import OperationalError
+    from app.db.session import get_db
+
+    client, _ = auth_client
+    def unavailable_db():
+        raise OperationalError("connection", {}, Exception("unreachable"))
+        yield  # pragma: no cover
+
+    client.app.dependency_overrides[get_db] = unavailable_db
+    response = client.post("/api/auth/signin", json={"email": "planner@example.com", "password": "correct-password"})
+    assert response.status_code == 503
+    assert "Database unavailable" in response.json()["detail"]
+
+
+def test_corrupted_password_hash_cannot_sign_in(auth_client):
+    client, engine = auth_client
+    signup(client)
+    with Session(engine) as db:
+        db.scalar(select(User)).password_hash = "not-a-bcrypt-hash"
+        db.commit()
+    response = client.post("/api/auth/signin", json={"email": "planner@example.com", "password": "correct-password"})
+    assert response.status_code == 401

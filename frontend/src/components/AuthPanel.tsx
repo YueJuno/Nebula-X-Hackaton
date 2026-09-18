@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { authenticate, getCurrentUser } from "../api/auth";
+import { AuthApiError, authenticate, getCurrentUser } from "../api/auth";
 import type { User } from "../types/auth";
 
 export default function AuthPanel({ onUserChange }: { onUserChange: (user: User | null) => void }) {
@@ -7,6 +7,7 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signupCode, setSignupCode] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [busy, setBusy] = useState(false);
   const [restoring, setRestoring] = useState(true);
@@ -26,7 +27,11 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
     if (!token) { setRestoring(false); return; }
     getCurrentUser(token)
       .then(value => { if (active) setUser(value); })
-      .catch(() => { if (active) sessionStorage.removeItem("access_token"); })
+      .catch((cause: unknown) => {
+        if (!active) return;
+        if (cause instanceof AuthApiError && cause.status === 401) sessionStorage.removeItem("access_token");
+        setError(cause instanceof Error ? cause.message : "Could not restore your session.");
+      })
       .finally(() => { if (active) setRestoring(false); });
     return () => { active = false; };
   }, []);
@@ -36,17 +41,29 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
     const token = sessionStorage.getItem("access_token");
     if (!token) return;
     // The server is authoritative; this timer also clears expired UI sessions.
-    const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+    let expiresAt: number;
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+      if (typeof payload.exp !== "number" || !Number.isFinite(payload.exp)) throw new Error("Invalid expiry");
+      expiresAt = payload.exp * 1000;
+    } catch {
+      sessionStorage.removeItem("access_token"); setUser(null); setError("Invalid session. Please sign in again.");
+      return;
+    }
     const timer = window.setTimeout(() => {
       sessionStorage.removeItem("access_token");
       setUser(null);
       setError("Your session expired. Please sign in again.");
-    }, Math.max(0, payload.exp * 1000 - Date.now()));
+    }, Math.max(0, expiresAt - Date.now()));
     return () => window.clearTimeout(timer);
   }, [user]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (mode === "signup" && password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -55,6 +72,7 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
       setUser(result.user);
       setPassword("");
       setSignupCode("");
+      setConfirmPassword("");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not complete authentication.");
     } finally { setBusy(false); }
@@ -73,7 +91,7 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
           <div className="auth-tabs" role="group" aria-label="Account action">
             {(["signin", "signup"] as const).map(value => (
               <button key={value} disabled={busy} aria-pressed={mode === value}
-                onClick={() => { setMode(value); setError(""); setPassword(""); setSignupCode(""); }}>
+                onClick={() => { setMode(value); setError(""); setPassword(""); setSignupCode(""); setConfirmPassword(""); }}>
                 {value === "signin" ? "Sign in" : "Sign up"}
               </button>
             ))}
@@ -84,6 +102,8 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
             <label>Password<input type="password" autoComplete={mode === "signup" ? "new-password" : "current-password"}
               required minLength={8} value={password} disabled={busy} onChange={event => setPassword(event.target.value)} /></label>
             {mode === "signup" && <>
+              <label>Confirm password<input type="password" autoComplete="new-password" required minLength={8}
+                value={confirmPassword} disabled={busy} onChange={event => setConfirmPassword(event.target.value)} /></label>
               <p className="note">Use at least 8 characters. Passwords may contain at most 72 UTF-8 bytes.</p>
               <label>Signup code<input type="password" autoComplete="off" required maxLength={256} value={signupCode}
                 disabled={busy} onChange={event => setSignupCode(event.target.value)} /></label>
