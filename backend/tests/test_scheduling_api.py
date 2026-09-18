@@ -75,8 +75,13 @@ def test_upload_prepare_persist_and_owner_isolation(client_context):
     run = run_response.json()
     assert process_next(engine)
     final = client.get(f"/api/runs/{run['id']}", headers=owner).json()
-    assert final["status"] == "needs_validation" and final["schedule"] is not None
+    # A run completes when the built-in validator clears it; the CSVs stay
+    # downloadable either way so violations can be inspected.
+    assert final["schedule"] is not None
+    assert final["report"]["validation"]["feasible"] is True
+    assert final["status"] == "completed"
     assert final["report"]["policy"]["scenario"] == "B"
+    assert final["report"]["policy"]["buffer_granularity"] == "week"
     assert client.get(f"/api/runs/{run['id']}", headers=other).status_code == 404
     assert client.get(f"/api/runs/{run['id']}/report", headers=owner).status_code == 200
     assert (

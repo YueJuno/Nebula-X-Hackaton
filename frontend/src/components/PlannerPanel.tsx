@@ -4,8 +4,10 @@ import type { User } from "../types/auth";
 import type { Capabilities, Dataset, Instance, Run } from "../types/scheduling";
 import NetworkPreview from "./NetworkPreview";
 import ScheduleTimeline from "./ScheduleTimeline";
+import ValidationReport from "./ValidationReport";
+import DelayExplanations from "./DelayExplanations";
 
-export default function PlannerPanel({ user, scenario }: { user: User | null; scenario: string }) {
+export default function PlannerPanel({ user, scenario, granularity }: { user: User | null; scenario: string; granularity: string }) {
   const [capabilities, setCapabilities] = useState<Capabilities | null>(null);
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [runs, setRuns] = useState<Run[]>([]);
@@ -70,7 +72,7 @@ export default function PlannerPanel({ user, scenario }: { user: User | null; sc
   async function start() {
     setBusy(true); setError("");
     try {
-      const run = await createRun(selected, scenario);
+      const run = await createRun(selected, scenario, granularity);
       setActiveRun(run); setRuns(previous => [run, ...previous]);
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Could not start run."); }
     finally { setBusy(false); }
@@ -126,11 +128,9 @@ export default function PlannerPanel({ user, scenario }: { user: User | null; sc
           </div>}
           <button onClick={() => download("report")}>Download solve / validation report</button>
           <details><summary>Model statistics</summary><pre>{activeRun.report.model_stats}</pre></details>
-          {activeRun.report.validation && <div><h4>Reference validation: {activeRun.report.validation.status}</h4>
-            <p>Feasible: {String(activeRun.report.validation.feasible)}</p>
-            {activeRun.report.validation.hard_violations?.map((violation, index) => <p key={index} className="error">{violation.rule}: {violation.detail}</p>)}
-            {activeRun.report.validation.soft_scores && <pre>{JSON.stringify(activeRun.report.validation.soft_scores, null, 2)}</pre>}
-          </div>}
+          {activeRun.report.validation && <ValidationReport validation={activeRun.report.validation} />}
+          {activeRun.report.explanation && <DelayExplanations explanation={activeRun.report.explanation} />}
+          {activeRun.report.external_validation && <ValidationReport validation={activeRun.report.external_validation} />}
         </>}
         {["completed", "needs_validation"].includes(activeRun.status) &&
           <button onClick={() => download("submission")}>Download submission CSVs</button>}

@@ -32,6 +32,7 @@ class Run(Base):
     owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
     dataset_id: Mapped[str] = mapped_column(ForeignKey("datasets.id"), index=True)
     scenario: Mapped[str] = mapped_column(String(1))
+    buffer_granularity: Mapped[str] = mapped_column(String(16), default="week")
     status: Mapped[str] = mapped_column(String(24), default="queued", index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

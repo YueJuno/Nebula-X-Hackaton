@@ -15,6 +15,8 @@ class DatasetResponse(BaseModel):
 class RunRequest(BaseModel):
     dataset_id: str = Field(min_length=36, max_length=36)
     scenario: Literal["A", "B", "C"]
+    # Section 2.4 rule 3 is ambiguous; "week" is the reading that satisfies both.
+    buffer_granularity: Literal["week", "possession"] = "week"
 
 
 class RunResponse(BaseModel):
@@ -22,6 +24,7 @@ class RunResponse(BaseModel):
     id: str
     dataset_id: str
     scenario: str
+    buffer_granularity: str
     status: str
     created_at: datetime
     started_at: datetime | None
