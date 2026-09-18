@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { authenticate, getCurrentUser } from "../api/auth";
 import type { User } from "../types/auth";
 
-export default function AuthPanel() {
+export default function AuthPanel({ onUserChange }: { onUserChange: (user: User | null) => void }) {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,6 +11,14 @@ export default function AuthPanel() {
   const [busy, setBusy] = useState(false);
   const [restoring, setRestoring] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => { onUserChange(user); }, [user, onUserChange]);
+
+  useEffect(() => {
+    const expired = () => { setUser(null); setError("Your session expired. Please sign in again."); };
+    window.addEventListener("auth:expired", expired);
+    return () => window.removeEventListener("auth:expired", expired);
+  }, []);
 
   useEffect(() => {
     let active = true;

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { API_BASE_URL, getHealth } from "./api/client";
 import AuthPanel from "./components/AuthPanel";
+import PlannerPanel from "./components/PlannerPanel";
+import type { User } from "./types/auth";
 
 type Connection = "checking" | "connected" | "unavailable";
 
@@ -15,6 +17,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
   const [scenario, setScenario] = useState<string>("A");
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -47,7 +50,7 @@ export default function App() {
         <p className="intro">Plan overnight work across the network and compare scheduling trade-offs.</p>
       </header>
 
-      <AuthPanel />
+      <AuthPanel onUserChange={setUser} />
 
       <section className="panel" aria-labelledby="connection-heading">
         <div className="panel-heading">
@@ -75,8 +78,9 @@ export default function App() {
             </button>
           ))}
         </div>
-        <p className="note">Scenario {scenario} selected. Dataset upload, solver execution, and results will be added next.</p>
+        <p className="note">Scenario {scenario} selected for the next run.</p>
       </section>
+      <PlannerPanel user={user} scenario={scenario} />
     </main>
   );
 }

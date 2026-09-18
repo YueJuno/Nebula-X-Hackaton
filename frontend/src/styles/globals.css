@@ -39,6 +39,25 @@ code { overflow-wrap: anywhere; }
 .auth-form input { width: 100%; padding: 10px 12px; font: inherit; border: 1px solid #bfcee0; border-radius: 8px; }
 .auth-form input:focus-visible { outline: 3px solid #397bd1; outline-offset: 2px; }
 .auth-form .note { margin: 0; font-size: .85rem; }
+.notice { padding: 14px; background: #fff6df; border: 1px solid #e8d191; border-radius: 8px; color: #65501b; }
+.upload-form { display: grid; gap: 14px; margin: 20px 0; }
+.upload-form label, .dataset-picker label { display: grid; gap: 6px; }
+.upload-form input, select { font: inherit; padding: 10px; border: 1px solid #bfcee0; border-radius: 8px; max-width: 100%; }
+.upload-form input[type="file"] { background: #f7f9fc; }
+.metrics { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+.metrics span { background: #eff4fb; padding: 10px 14px; border-radius: 8px; }
+.run-result { margin: 24px 0; padding: 18px; background: #f6f8fb; border-radius: 10px; }
+details { margin: 14px 0; }
+summary { cursor: pointer; color: #23486f; font-weight: 600; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .8rem; }
+.network-scroll, .table-scroll { overflow-x: auto; }
+.network-scroll svg { width: 100%; min-width: 650px; margin-top: 20px; }
+table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: .85rem; }
+th, td { padding: 9px; border-bottom: 1px solid #d9e2ee; text-align: left; white-space: nowrap; }
+th { background: #eff4fb; }
+.timeline-access { background: #d8eee3; text-align: center; }
+.run-history { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.multiline { white-space: pre-wrap; }
 @media (max-width: 700px) {
   .scenarios { grid-template-columns: 1fr; }
   .shell { padding: 24px 16px; }

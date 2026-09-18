@@ -6,6 +6,8 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.routes.health import router as health_router
 from app.api.routes.auth import router as auth_router
+from app.api.routes.instances import router as instances_router
+from app.api.routes.runs import router as runs_router
 from app.core.config import get_settings
 
 
@@ -21,6 +23,8 @@ def create_app() -> FastAPI:
     )
     application.include_router(health_router, prefix="/api")
     application.include_router(auth_router, prefix="/api")
+    application.include_router(instances_router, prefix="/api")
+    application.include_router(runs_router, prefix="/api")
 
     @application.exception_handler(RequestValidationError)
     async def validation_error(request, exc):

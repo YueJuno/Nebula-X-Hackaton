@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     jwt_secret: SecretStr = SecretStr("")
     jwt_algorithm: Literal["HS256"] = "HS256"
     access_token_expire_minutes: int = Field(default=15, ge=1, le=1440)
+    solver_time_limit_seconds: int = Field(default=60, ge=1, le=300)
+    validator_command: list[str] | None = None
 
     model_config = SettingsConfigDict(
         env_file=Path(__file__).resolve().parents[2] / ".env",
