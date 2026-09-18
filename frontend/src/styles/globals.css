@@ -32,6 +32,13 @@ button:disabled { opacity: .6; cursor: wait; }
 .scenario-id { font-size: .8rem; font-weight: 700; color: #3262a0; }
 .scenario > span:last-child { font-size: .9rem; color: #526479; }
 code { overflow-wrap: anywhere; }
+.auth-tabs { display: flex; gap: 12px; margin: 20px 0; }
+.auth-tabs button[aria-pressed="true"] { background: #23486f; color: white; }
+.auth-form { display: grid; gap: 16px; max-width: 440px; }
+.auth-form label { display: grid; gap: 6px; font-weight: 600; }
+.auth-form input { width: 100%; padding: 10px 12px; font: inherit; border: 1px solid #bfcee0; border-radius: 8px; }
+.auth-form input:focus-visible { outline: 3px solid #397bd1; outline-offset: 2px; }
+.auth-form .note { margin: 0; font-size: .85rem; }
 @media (max-width: 700px) {
   .scenarios { grid-template-columns: 1fr; }
   .shell { padding: 24px 16px; }

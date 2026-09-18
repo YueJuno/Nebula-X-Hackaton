@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { API_BASE_URL, getHealth } from "./api/client";
+import AuthPanel from "./components/AuthPanel";
 
 type Connection = "checking" | "connected" | "unavailable";
 
@@ -45,6 +46,8 @@ export default function App() {
         <h1>Railway Track Access Scheduler</h1>
         <p className="intro">Plan overnight work across the network and compare scheduling trade-offs.</p>
       </header>
+
+      <AuthPanel />
 
       <section className="panel" aria-labelledby="connection-heading">
         <div className="panel-heading">
