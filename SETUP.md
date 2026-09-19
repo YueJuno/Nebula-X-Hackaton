@@ -201,7 +201,7 @@ for download, and any submission folder can be checked on its own:
 
 `--check` needs no OR-Tools and exits `0` when feasible, `2` otherwise, so it
 drops straight into CI. It prints the full section 2.7 report plus a one-line
-verdict such as `INFEASIBLE (week granularity): closure=65, co_share=14`.
+verdict such as `INFEASIBLE (week granularity): closure=49`.
 
 | Module | Responsibility |
 | --- | --- |
@@ -210,7 +210,7 @@ verdict such as `INFEASIBLE (week granularity): closure=65, co_share=14`.
 | `backend/scheduler/scoring.py` | Soft scores and the section 2.5 objective |
 | `backend/scheduler/validator.py` | Assembles the report; adapts an external validator when configured |
 
-Rule tags: `workload`, `start_date`, `closure`, `mix`, `co_share`, `allocation`,
+Rule tags: `workload`, `start_date`, `closure`, `mix`, `allocation`,
 `workfront`, `eclo`, `eclo_window`, `capacity`, `planned_date`, `predecessor`,
 `occupancy`, `results`, `format`.
 
@@ -225,12 +225,12 @@ Measured on the public instance:
 
 | Scenario | Week-strict objective | Per-possession objective | Feasible under both? |
 | --- | ---: | ---: | --- |
-| A | 123.2 | 25.2 | week-strict only |
-| B | 40.0 | 30.0 | week-strict only |
-| C | 36.1 | 25.2 | week-strict only |
+| A | 131.6 | 25.2 | week-strict only |
+| B | 50.0 | 30.0 | week-strict only |
+| C | 44.5 | 25.2 | week-strict only |
 
-Week-strict costs quality but is immune to however scoring resolves the rule;
-the per-possession model scores better and produces 43-67 `closure` violations
+Week-strict costs quality but passes both modeled readings in our checker;
+the per-possession model scores better and produces `closure` violations
 if the strict reading is the one used. Since feasibility is a gate and score is
 a margin, the repository ships week-strict and keeps the looser model available
 for comparison. No Priority-1 contract overruns under either.
@@ -238,7 +238,8 @@ for comparison. No Priority-1 contract overruns under either.
 The two readings:
 
 - `week` (default) — any two activities holding an access in the same week
-  conflict when one's occupied span falls inside the other's closure. This is
+  conflict when one's occupied span falls inside the other's closure, or when
+  their closure zones overlap. This is
   the conservative reading and matches the week-granular pinpoint in the
   section 2.7 example. Neither submitted field orders nights across contracts:
   `access_night` is explicitly local to a contract+type, and `co_share_group`
@@ -249,6 +250,15 @@ The two readings:
 
 Co-sharing exempts a pair under either reading. Run both before submitting: a
 schedule that is feasible only under `possession` is betting on the looser
+interpretation.
+
+Group labels are local to each `(location_id, week)`; one activity may use
+different labels along its route. The supplied organizer sample does so and
+passes the built-in `possession` reading. It also contains 11 shared local
+groups whose members have different `access_night` indices, so the solver and
+built-in validator do not infer a hard night/group equivalence that the sample
+itself would violate. The sample has 49 closure findings under the conservative
+`week` reading; only the organizers' official validator can settle that
 interpretation.
 
 Adding a run's interpretation to an existing database needs one statement, since

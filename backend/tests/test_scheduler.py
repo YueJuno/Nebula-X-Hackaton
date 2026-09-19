@@ -89,12 +89,17 @@ def test_public_scenario_a_schedule_obeys_core_rules(public_instance):
     }
 
     assert schedule.solver_status in {"FEASIBLE", "OPTIMAL"}
-    assert set(by_activity) == {activity.activity_id for activity in public_instance.activities}
+    assert set(by_activity) == {
+        activity.activity_id for activity in public_instance.activities
+    }
     for activity in public_instance.activities:
         accesses = by_activity[activity.activity_id]
-        assert 2 * len(accesses) + sum(access.eclo for access in accesses) >= 2 * activity.total_accesses
+        assert (
+            2 * len(accesses) + sum(access.eclo for access in accesses)
+            >= 2 * activity.total_accesses
+        )
         assert all(
-            public_instance.week_start(access.week) >= activity.planned_start_date
+            public_instance.week_end(access.week) >= activity.planned_start_date
             for access in accesses
         )
         assert all(
@@ -151,7 +156,9 @@ def test_run_solves_and_self_validates(public_instance):
     assert validation["status"] == "validated"
     assert isinstance(validation["feasible"], bool)
     assert "external_validation" not in result["report"]
-    assert result["status"] == ("completed" if validation["feasible"] else "needs_validation")
+    assert result["status"] == (
+        "completed" if validation["feasible"] else "needs_validation"
+    )
 
 
 def test_policy_and_priority_bands():
@@ -204,11 +211,7 @@ def test_validator_missing_is_not_feasible(tmp_path):
 
 @pytest.mark.parametrize("scenario", ["A", "B", "C"])
 def test_solver_output_passes_its_own_validator(public_instance, scenario):
-    """Rule 5 regression: one possession must never report two access_nights.
-
-    `co_share` breaches are unambiguous under either buffer reading, so the
-    solver's own export has to come back clean on that tag in every scenario.
-    """
+    """An exported schedule must pass the built-in checks in both modes."""
     schedule = solve(public_instance, scenario, 60)
     exports = export_files(public_instance, schedule, scenario)
     fired = {
@@ -219,7 +222,7 @@ def test_solver_output_passes_its_own_validator(public_instance, scenario):
         )
         for granularity in ("week", "possession")
     }
-    assert "co_share" not in fired["week"]
+    assert fired["week"] == set()
     assert fired["possession"] == set()
 
 

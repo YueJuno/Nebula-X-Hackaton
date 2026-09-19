@@ -20,7 +20,7 @@
     "buffer_granularity": "week"
   },
   "missing_constraints": [],
-  "model_stats": "optimization model '': (model_fingerprint: 0x8cfca896bafc3623)\n#Variables: 115'010 (#bools: 1'620 #ints: 2'280 in objective) (115'010 primary variables)\n  - 103'080 Booleans in [0,1]\n  - 3 in [0,7]\n  - 2'280 in [0,12]\n  - 6 in [0,14]\n  - 12 in [0,21]\n  - 14 in [0,28]\n  - 4 in [0,35]\n  - 6 in [0,49]\n  - 1 in [0,63]\n  - 6 in [0,77]\n  - 2 in [0,133]\n  - 60 in [1,2]\n  - 1'560 in [1,3]\n  - 7'920 in [1,12]\n  - 56 in [1,30]\n",
+  "model_stats": "optimization model '': (model_fingerprint: 0xcf52e3b3e0c94a5d)\n#Variables: 56'450 (#bools: 1'620 #ints: 2'280 in objective) (56'450 primary variables)\n  - 39'720 Booleans in [0,1]\n  - 2'280 in [0,4]\n  - 3 in [0,7]\n  - 6 in [0,14]\n  - 12 in [0,21]\n  - 14 in [0,28]\n  - 4 in [0,35]\n  - 6 in [0,49]\n  - 1 in [0,63]\n  - 6 in [0,77]\n  - 2 in [0,133]\n  - 60 in [1,2]\n  - 1'560 in [1,3]\n  - 12'720 in [1,4]\n  - 56 in [1,30]\n",
   "footprints": {
     "A001": {
       "activity_id": "A001",
@@ -1082,10 +1082,10 @@
   },
   "notice": "Solver output produced; see validation for feasibility.",
   "solution": {
-    "solver_status": "OPTIMAL",
-    "objective_score": 40.0,
-    "nights_scheduled": 188,
-    "eclo_nights_total": 8,
+    "solver_status": "FEASIBLE",
+    "objective_score": 50.0,
+    "nights_scheduled": 187,
+    "eclo_nights_total": 10,
     "excess_access_nights_total": 0,
     "contracts_overrunning": 0,
     "overrun_days_total": 0,
@@ -1119,7 +1119,7 @@
       },
       {
         "location_id": "PLAT:ALP:H01:EB",
-        "week": 18,
+        "week": 20,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1127,13 +1127,6 @@
       {
         "location_id": "PLAT:ALP:H01:EB",
         "week": 21,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H01:EB",
-        "week": 22,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1154,28 +1147,7 @@
       },
       {
         "location_id": "PLAT:ALP:H01:WB",
-        "week": 3,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H01:WB",
         "week": 4,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H01:WB",
-        "week": 6,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H01:WB",
-        "week": 7,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1210,6 +1182,27 @@
       },
       {
         "location_id": "PLAT:ALP:H01:WB",
+        "week": 13,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H01:WB",
+        "week": 14,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H01:WB",
+        "week": 15,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H01:WB",
         "week": 17,
         "possessions": 1,
         "nominal_supply": 1,
@@ -1238,21 +1231,7 @@
       },
       {
         "location_id": "PLAT:ALP:H01:WB",
-        "week": 23,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H01:WB",
-        "week": 25,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H01:WB",
-        "week": 26,
+        "week": 24,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1260,20 +1239,6 @@
       {
         "location_id": "PLAT:ALP:H01:WB",
         "week": 27,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H02:EB",
-        "week": 13,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H02:EB",
-        "week": 14,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1294,7 +1259,14 @@
       },
       {
         "location_id": "PLAT:ALP:H02:EB",
-        "week": 21,
+        "week": 20,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H02:EB",
+        "week": 22,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1315,28 +1287,7 @@
       },
       {
         "location_id": "PLAT:ALP:H02:WB",
-        "week": 3,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H02:WB",
         "week": 4,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H02:WB",
-        "week": 6,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:H02:WB",
-        "week": 7,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1357,6 +1308,48 @@
       },
       {
         "location_id": "PLAT:ALP:H02:WB",
+        "week": 11,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H02:WB",
+        "week": 12,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H02:WB",
+        "week": 13,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H02:WB",
+        "week": 14,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H02:WB",
+        "week": 15,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H02:WB",
+        "week": 17,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H02:WB",
         "week": 19,
         "possessions": 1,
         "nominal_supply": 1,
@@ -1371,49 +1364,70 @@
       },
       {
         "location_id": "PLAT:ALP:H02:WB",
-        "week": 23,
+        "week": 24,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:H02:WB",
+        "week": 25,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
       },
       {
         "location_id": "PLAT:ALP:S03:WB",
-        "week": 6,
-        "possessions": 2,
-        "nominal_supply": 2,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:ALP:S03:WB",
-        "week": 7,
+        "week": 19,
         "possessions": 2,
         "nominal_supply": 2,
         "excess": 0
       },
       {
         "location_id": "PLAT:ALP:S04:WB",
-        "week": 6,
+        "week": 19,
         "possessions": 2,
         "nominal_supply": 2,
         "excess": 0
       },
       {
-        "location_id": "PLAT:ALP:S04:WB",
-        "week": 7,
+        "location_id": "PLAT:ALP:S06:WB",
+        "week": 23,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:ALP:S06:WB",
+        "week": 26,
         "possessions": 2,
         "nominal_supply": 2,
         "excess": 0
       },
       {
         "location_id": "PLAT:BET:H01:EB",
-        "week": 5,
+        "week": 4,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
       },
       {
         "location_id": "PLAT:BET:H01:EB",
-        "week": 6,
+        "week": 8,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:EB",
+        "week": 9,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:EB",
+        "week": 10,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1483,348 +1497,425 @@
       },
       {
         "location_id": "PLAT:BET:H01:EB",
-        "week": 20,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:EB",
-        "week": 22,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:EB",
-        "week": 23,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:EB",
-        "week": 24,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:EB",
-        "week": 25,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:EB",
-        "week": 26,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:EB",
-        "week": 27,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:WB",
-        "week": 2,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:WB",
-        "week": 3,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:WB",
-        "week": 4,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:WB",
-        "week": 5,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:WB",
-        "week": 6,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:WB",
-        "week": 7,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:WB",
-        "week": 8,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H01:WB",
-        "week": 28,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 5,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 6,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 11,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 12,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 13,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 14,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 15,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 16,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 17,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 18,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 19,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 20,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 22,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 23,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 24,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 25,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 26,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:EB",
-        "week": 27,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 2,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 3,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 4,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 5,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 6,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 7,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 8,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 19,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 23,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 24,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 25,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 26,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "PLAT:BET:H02:WB",
-        "week": 28,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "SEC:ALP:H01_H02:EB",
-        "week": 17,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "SEC:ALP:H01_H02:EB",
-        "week": 18,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "SEC:ALP:H01_H02:EB",
         "week": 21,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
       },
       {
+        "location_id": "PLAT:BET:H01:EB",
+        "week": 22,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:EB",
+        "week": 23,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:EB",
+        "week": 24,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:EB",
+        "week": 25,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:EB",
+        "week": 26,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:EB",
+        "week": 27,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:WB",
+        "week": 2,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:WB",
+        "week": 3,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:WB",
+        "week": 4,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:WB",
+        "week": 7,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:WB",
+        "week": 8,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:WB",
+        "week": 16,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:WB",
+        "week": 17,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H01:WB",
+        "week": 28,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 4,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 8,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 9,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 10,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 11,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 12,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 13,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 14,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 15,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 16,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 17,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 18,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 19,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 21,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 22,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 23,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 24,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 25,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 26,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:EB",
+        "week": 27,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 2,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 3,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 4,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 7,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 8,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 16,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 17,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 18,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 23,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:H02:WB",
+        "week": 28,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S15:EB",
+        "week": 10,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S15:EB",
+        "week": 13,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S15:EB",
+        "week": 15,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S15:EB",
+        "week": 21,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S15:EB",
+        "week": 23,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S15:EB",
+        "week": 25,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S15:WB",
+        "week": 8,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S16:EB",
+        "week": 13,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S16:EB",
+        "week": 15,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S16:EB",
+        "week": 21,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S16:EB",
+        "week": 23,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S16:EB",
+        "week": 27,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "PLAT:BET:S18:EB",
+        "week": 22,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:ALP:H01_H02:EB",
+        "week": 17,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:ALP:H01_H02:EB",
+        "week": 20,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
         "location_id": "SEC:ALP:H01_H02:EB",
         "week": 23,
         "possessions": 1,
@@ -1840,28 +1931,7 @@
       },
       {
         "location_id": "SEC:ALP:H01_H02:WB",
-        "week": 3,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "SEC:ALP:H01_H02:WB",
         "week": 4,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "SEC:ALP:H01_H02:WB",
-        "week": 6,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "SEC:ALP:H01_H02:WB",
-        "week": 7,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1882,6 +1952,48 @@
       },
       {
         "location_id": "SEC:ALP:H01_H02:WB",
+        "week": 11,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:ALP:H01_H02:WB",
+        "week": 12,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:ALP:H01_H02:WB",
+        "week": 13,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:ALP:H01_H02:WB",
+        "week": 14,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:ALP:H01_H02:WB",
+        "week": 15,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:ALP:H01_H02:WB",
+        "week": 17,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:ALP:H01_H02:WB",
         "week": 19,
         "possessions": 1,
         "nominal_supply": 1,
@@ -1896,21 +2008,42 @@
       },
       {
         "location_id": "SEC:ALP:H01_H02:WB",
-        "week": 23,
+        "week": 24,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:ALP:S04_H01:WB",
+        "week": 19,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:BET:H01_H02:EB",
+        "week": 4,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
       },
       {
         "location_id": "SEC:BET:H01_H02:EB",
-        "week": 5,
+        "week": 8,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
       },
       {
         "location_id": "SEC:BET:H01_H02:EB",
-        "week": 6,
+        "week": 9,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:BET:H01_H02:EB",
+        "week": 10,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -1980,7 +2113,7 @@
       },
       {
         "location_id": "SEC:BET:H01_H02:EB",
-        "week": 20,
+        "week": 21,
         "possessions": 1,
         "nominal_supply": 1,
         "excess": 0
@@ -2050,20 +2183,6 @@
       },
       {
         "location_id": "SEC:BET:H01_H02:WB",
-        "week": 5,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "SEC:BET:H01_H02:WB",
-        "week": 6,
-        "possessions": 1,
-        "nominal_supply": 1,
-        "excess": 0
-      },
-      {
-        "location_id": "SEC:BET:H01_H02:WB",
         "week": 7,
         "possessions": 1,
         "nominal_supply": 1,
@@ -2078,9 +2197,51 @@
       },
       {
         "location_id": "SEC:BET:H01_H02:WB",
+        "week": 16,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:BET:H01_H02:WB",
+        "week": 17,
+        "possessions": 1,
+        "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:BET:H01_H02:WB",
         "week": 28,
         "possessions": 1,
         "nominal_supply": 1,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:BET:H02_S15:EB",
+        "week": 13,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:BET:H02_S15:EB",
+        "week": 15,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:BET:H02_S15:EB",
+        "week": 23,
+        "possessions": 2,
+        "nominal_supply": 2,
+        "excess": 0
+      },
+      {
+        "location_id": "SEC:BET:H02_S15:WB",
+        "week": 8,
+        "possessions": 2,
+        "nominal_supply": 2,
         "excess": 0
       }
     ],
@@ -2111,8 +2272,8 @@
       },
       {
         "contract_number": "C004",
-        "completion_week": 28,
-        "simulated_completion_date": "2027-07-18",
+        "completion_week": 29,
+        "simulated_completion_date": "2027-07-25",
         "planned_completion_date": "2027-07-25",
         "overrun_days": 0,
         "priority": 1
@@ -2143,8 +2304,8 @@
       },
       {
         "contract_number": "C008",
-        "completion_week": 28,
-        "simulated_completion_date": "2027-07-18",
+        "completion_week": 27,
+        "simulated_completion_date": "2027-07-11",
         "planned_completion_date": "2027-07-18",
         "overrun_days": 0,
         "priority": 3
@@ -2175,16 +2336,16 @@
       },
       {
         "contract_number": "C012",
-        "completion_week": 27,
-        "simulated_completion_date": "2027-07-11",
+        "completion_week": 23,
+        "simulated_completion_date": "2027-06-13",
         "planned_completion_date": "2027-07-11",
         "overrun_days": 0,
         "priority": 1
       },
       {
         "contract_number": "C013",
-        "completion_week": 21,
-        "simulated_completion_date": "2027-05-30",
+        "completion_week": 20,
+        "simulated_completion_date": "2027-05-23",
         "planned_completion_date": "2027-05-30",
         "overrun_days": 0,
         "priority": 2
@@ -2207,16 +2368,16 @@
       "scenario": "B",
       "overrun_days_total": 0,
       "contracts_overrunning": 0,
-      "earliness_days_total": 14,
+      "earliness_days_total": 49,
       "excess_access_nights_total": 0,
-      "eclo_nights_total": 8,
+      "eclo_nights_total": 10,
       "priority_overrun": {
         "1": 0,
         "2": 0,
         "3": 0
       },
       "priority_weighted_score": 0.0,
-      "objective_score": 40.0,
+      "objective_score": 50.0,
       "formula_version": "ps1-2.5"
     },
     "detail": {
@@ -2244,7 +2405,7 @@
         },
         {
           "location_id": "PLAT:ALP:H01:EB",
-          "week": 18,
+          "week": 20,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -2252,13 +2413,6 @@
         {
           "location_id": "PLAT:ALP:H01:EB",
           "week": 21,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H01:EB",
-          "week": 22,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -2279,28 +2433,7 @@
         },
         {
           "location_id": "PLAT:ALP:H01:WB",
-          "week": 3,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H01:WB",
           "week": 4,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H01:WB",
-          "week": 6,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H01:WB",
-          "week": 7,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -2335,6 +2468,27 @@
         },
         {
           "location_id": "PLAT:ALP:H01:WB",
+          "week": 13,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H01:WB",
+          "week": 14,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H01:WB",
+          "week": 15,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H01:WB",
           "week": 17,
           "possessions": 1,
           "nominal_supply": 1,
@@ -2363,21 +2517,7 @@
         },
         {
           "location_id": "PLAT:ALP:H01:WB",
-          "week": 23,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H01:WB",
-          "week": 25,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H01:WB",
-          "week": 26,
+          "week": 24,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -2385,20 +2525,6 @@
         {
           "location_id": "PLAT:ALP:H01:WB",
           "week": 27,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H02:EB",
-          "week": 13,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H02:EB",
-          "week": 14,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -2419,7 +2545,14 @@
         },
         {
           "location_id": "PLAT:ALP:H02:EB",
-          "week": 21,
+          "week": 20,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H02:EB",
+          "week": 22,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -2440,28 +2573,7 @@
         },
         {
           "location_id": "PLAT:ALP:H02:WB",
-          "week": 3,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H02:WB",
           "week": 4,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H02:WB",
-          "week": 6,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:H02:WB",
-          "week": 7,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -2482,6 +2594,48 @@
         },
         {
           "location_id": "PLAT:ALP:H02:WB",
+          "week": 11,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H02:WB",
+          "week": 12,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H02:WB",
+          "week": 13,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H02:WB",
+          "week": 14,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H02:WB",
+          "week": 15,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H02:WB",
+          "week": 17,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H02:WB",
           "week": 19,
           "possessions": 1,
           "nominal_supply": 1,
@@ -2496,49 +2650,70 @@
         },
         {
           "location_id": "PLAT:ALP:H02:WB",
-          "week": 23,
+          "week": 24,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:H02:WB",
+          "week": 25,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
         },
         {
           "location_id": "PLAT:ALP:S03:WB",
-          "week": 6,
-          "possessions": 2,
-          "nominal_supply": 2,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:ALP:S03:WB",
-          "week": 7,
+          "week": 19,
           "possessions": 2,
           "nominal_supply": 2,
           "excess": 0
         },
         {
           "location_id": "PLAT:ALP:S04:WB",
-          "week": 6,
+          "week": 19,
           "possessions": 2,
           "nominal_supply": 2,
           "excess": 0
         },
         {
-          "location_id": "PLAT:ALP:S04:WB",
-          "week": 7,
+          "location_id": "PLAT:ALP:S06:WB",
+          "week": 23,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:ALP:S06:WB",
+          "week": 26,
           "possessions": 2,
           "nominal_supply": 2,
           "excess": 0
         },
         {
           "location_id": "PLAT:BET:H01:EB",
-          "week": 5,
+          "week": 4,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
         },
         {
           "location_id": "PLAT:BET:H01:EB",
-          "week": 6,
+          "week": 8,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:EB",
+          "week": 9,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:EB",
+          "week": 10,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -2608,348 +2783,425 @@
         },
         {
           "location_id": "PLAT:BET:H01:EB",
-          "week": 20,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:EB",
-          "week": 22,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:EB",
-          "week": 23,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:EB",
-          "week": 24,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:EB",
-          "week": 25,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:EB",
-          "week": 26,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:EB",
-          "week": 27,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:WB",
-          "week": 2,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:WB",
-          "week": 3,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:WB",
-          "week": 4,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:WB",
-          "week": 5,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:WB",
-          "week": 6,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:WB",
-          "week": 7,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:WB",
-          "week": 8,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H01:WB",
-          "week": 28,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 5,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 6,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 11,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 12,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 13,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 14,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 15,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 16,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 17,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 18,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 19,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 20,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 22,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 23,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 24,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 25,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 26,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:EB",
-          "week": 27,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 2,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 3,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 4,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 5,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 6,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 7,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 8,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 19,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 23,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 24,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 25,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 26,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "PLAT:BET:H02:WB",
-          "week": 28,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "SEC:ALP:H01_H02:EB",
-          "week": 17,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "SEC:ALP:H01_H02:EB",
-          "week": 18,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "SEC:ALP:H01_H02:EB",
           "week": 21,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
         },
         {
+          "location_id": "PLAT:BET:H01:EB",
+          "week": 22,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:EB",
+          "week": 23,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:EB",
+          "week": 24,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:EB",
+          "week": 25,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:EB",
+          "week": 26,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:EB",
+          "week": 27,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:WB",
+          "week": 2,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:WB",
+          "week": 3,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:WB",
+          "week": 4,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:WB",
+          "week": 7,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:WB",
+          "week": 8,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:WB",
+          "week": 16,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:WB",
+          "week": 17,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H01:WB",
+          "week": 28,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 4,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 8,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 9,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 10,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 11,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 12,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 13,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 14,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 15,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 16,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 17,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 18,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 19,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 21,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 22,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 23,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 24,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 25,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 26,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:EB",
+          "week": 27,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 2,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 3,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 4,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 7,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 8,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 16,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 17,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 18,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 23,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:H02:WB",
+          "week": 28,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S15:EB",
+          "week": 10,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S15:EB",
+          "week": 13,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S15:EB",
+          "week": 15,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S15:EB",
+          "week": 21,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S15:EB",
+          "week": 23,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S15:EB",
+          "week": 25,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S15:WB",
+          "week": 8,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S16:EB",
+          "week": 13,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S16:EB",
+          "week": 15,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S16:EB",
+          "week": 21,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S16:EB",
+          "week": 23,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S16:EB",
+          "week": 27,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "PLAT:BET:S18:EB",
+          "week": 22,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:ALP:H01_H02:EB",
+          "week": 17,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:ALP:H01_H02:EB",
+          "week": 20,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
           "location_id": "SEC:ALP:H01_H02:EB",
           "week": 23,
           "possessions": 1,
@@ -2965,28 +3217,7 @@
         },
         {
           "location_id": "SEC:ALP:H01_H02:WB",
-          "week": 3,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "SEC:ALP:H01_H02:WB",
           "week": 4,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "SEC:ALP:H01_H02:WB",
-          "week": 6,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "SEC:ALP:H01_H02:WB",
-          "week": 7,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -3007,6 +3238,48 @@
         },
         {
           "location_id": "SEC:ALP:H01_H02:WB",
+          "week": 11,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:ALP:H01_H02:WB",
+          "week": 12,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:ALP:H01_H02:WB",
+          "week": 13,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:ALP:H01_H02:WB",
+          "week": 14,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:ALP:H01_H02:WB",
+          "week": 15,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:ALP:H01_H02:WB",
+          "week": 17,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:ALP:H01_H02:WB",
           "week": 19,
           "possessions": 1,
           "nominal_supply": 1,
@@ -3021,21 +3294,42 @@
         },
         {
           "location_id": "SEC:ALP:H01_H02:WB",
-          "week": 23,
+          "week": 24,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:ALP:S04_H01:WB",
+          "week": 19,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:BET:H01_H02:EB",
+          "week": 4,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
         },
         {
           "location_id": "SEC:BET:H01_H02:EB",
-          "week": 5,
+          "week": 8,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
         },
         {
           "location_id": "SEC:BET:H01_H02:EB",
-          "week": 6,
+          "week": 9,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:BET:H01_H02:EB",
+          "week": 10,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -3105,7 +3399,7 @@
         },
         {
           "location_id": "SEC:BET:H01_H02:EB",
-          "week": 20,
+          "week": 21,
           "possessions": 1,
           "nominal_supply": 1,
           "excess": 0
@@ -3175,20 +3469,6 @@
         },
         {
           "location_id": "SEC:BET:H01_H02:WB",
-          "week": 5,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "SEC:BET:H01_H02:WB",
-          "week": 6,
-          "possessions": 1,
-          "nominal_supply": 1,
-          "excess": 0
-        },
-        {
-          "location_id": "SEC:BET:H01_H02:WB",
           "week": 7,
           "possessions": 1,
           "nominal_supply": 1,
@@ -3203,14 +3483,56 @@
         },
         {
           "location_id": "SEC:BET:H01_H02:WB",
+          "week": 16,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:BET:H01_H02:WB",
+          "week": 17,
+          "possessions": 1,
+          "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:BET:H01_H02:WB",
           "week": 28,
           "possessions": 1,
           "nominal_supply": 1,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:BET:H02_S15:EB",
+          "week": 13,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:BET:H02_S15:EB",
+          "week": 15,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:BET:H02_S15:EB",
+          "week": 23,
+          "possessions": 2,
+          "nominal_supply": 2,
+          "excess": 0
+        },
+        {
+          "location_id": "SEC:BET:H02_S15:WB",
+          "week": 8,
+          "possessions": 2,
+          "nominal_supply": 2,
           "excess": 0
         }
       ],
-      "nights_scheduled": 188,
-      "eclo_nights": 8,
+      "nights_scheduled": 187,
+      "eclo_nights": 10,
       "closure_granularity": "week",
       "hard_violations_total": 0,
       "violations_by_rule": {},
@@ -3244,11 +3566,11 @@
         },
         {
           "contract_number": "C004",
-          "completion_week": 28,
-          "simulated_completion_date": "2027-07-18",
+          "completion_week": 29,
+          "simulated_completion_date": "2027-07-25",
           "planned_completion_date": "2027-07-25",
           "overrun_days": 0,
-          "earliness_days": 7,
+          "earliness_days": 0,
           "contract_priority": 1
         },
         {
@@ -3280,11 +3602,11 @@
         },
         {
           "contract_number": "C008",
-          "completion_week": 28,
-          "simulated_completion_date": "2027-07-18",
+          "completion_week": 27,
+          "simulated_completion_date": "2027-07-11",
           "planned_completion_date": "2027-07-18",
           "overrun_days": 0,
-          "earliness_days": 0,
+          "earliness_days": 7,
           "contract_priority": 3
         },
         {
@@ -3316,20 +3638,20 @@
         },
         {
           "contract_number": "C012",
-          "completion_week": 27,
-          "simulated_completion_date": "2027-07-11",
+          "completion_week": 23,
+          "simulated_completion_date": "2027-06-13",
           "planned_completion_date": "2027-07-11",
           "overrun_days": 0,
-          "earliness_days": 0,
+          "earliness_days": 28,
           "contract_priority": 1
         },
         {
           "contract_number": "C013",
-          "completion_week": 21,
-          "simulated_completion_date": "2027-05-30",
+          "completion_week": 20,
+          "simulated_completion_date": "2027-05-23",
           "planned_completion_date": "2027-05-30",
           "overrun_days": 0,
-          "earliness_days": 0,
+          "earliness_days": 7,
           "contract_priority": 2
         },
         {

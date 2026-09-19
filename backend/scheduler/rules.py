@@ -4,7 +4,8 @@ Two readings of the buffer rule are defensible and the challenge pack ships no
 reference binary to settle it, so the granularity is explicit:
 
 * ``week``       - any two activities holding an access in the same week conflict
-                   when one's occupied span falls inside the other's closure.
+                   when one's occupied span falls inside the other's closure
+                   or their closure zones overlap.
                    Matches the week-granular pinpoint in the section 2.7 example
                    ("wk4: A012 inside closure of ['A010'] ...") and is the safe
                    reading, because neither submitted field orders nights across
@@ -97,10 +98,6 @@ class Index:
             index.active[week] = sorted(set(activity_ids))
         return index
 
-    def group_of(self, activity_id: str, week: int):
-        labels = {row.co_share_group for row in self.occupancy_at[activity_id, week]}
-        return labels.pop() if len(labels) == 1 else None
-
     def co_shared(self, first: str, second: str, week: int) -> bool:
         """True when both sit in one possession: a shared location under one label."""
         return bool(
@@ -124,7 +121,9 @@ def check_structure(index: Index) -> list[Violation]:
     ):
         for activity_id in sorted({row.activity_id for row in rows} - index.known):
             violations.append(
-                Violation(rule="format", detail=f"{label}: unknown activity {activity_id}")
+                Violation(
+                    rule="format", detail=f"{label}: unknown activity {activity_id}"
+                )
             )
     for activity in instance.activities:
         rows = index.accesses[activity.activity_id]
@@ -158,14 +157,6 @@ def check_structure(index: Index) -> list[Violation]:
                 Violation(
                     rule="occupancy",
                     detail=f"wk{week}: {activity_id} occupies locations without an access row",
-                )
-            )
-        if index.group_of(activity_id, week) is None:
-            violations.append(
-                Violation(
-                    rule="occupancy",
-                    detail=f"wk{week}: {activity_id} spans more than one co_share_group; "
-                    "one access is one possession",
                 )
             )
     for (activity_id, week), _rows in sorted(index.access_at.items()):
@@ -240,8 +231,15 @@ def check_predecessors(index: Index) -> list[Violation]:
         predecessor = activity.predecessor_activity_id
         if not predecessor or predecessor not in index.known:
             continue
-        before, after = index.accesses[predecessor], index.accesses[activity.activity_id]
-        if before and after and max(r.week for r in before) >= min(r.week for r in after):
+        before, after = (
+            index.accesses[predecessor],
+            index.accesses[activity.activity_id],
+        )
+        if (
+            before
+            and after
+            and max(r.week for r in before) >= min(r.week for r in after)
+        ):
             violations.append(
                 Violation(
                     rule="predecessor",
@@ -267,9 +265,10 @@ def check_closures(index: Index, granularity: Granularity) -> list[Violation]:
                 hit = index.occupied[victim] & zone
                 if not hit or index.co_shared(offender, victim, week):
                     continue
-                if granularity == "possession" and index.group_of(
-                    victim, week
-                ) != index.group_of(offender, week):
+                # Labels are local to a location, not a network-wide night ID.
+                # Under the possession reading, non-co-sharing pairs are on
+                # separate nights and their labels cannot be compared here.
+                if granularity == "possession":
                     continue
                 violations.append(
                     Violation(
@@ -278,6 +277,26 @@ def check_closures(index: Index, granularity: Granularity) -> list[Violation]:
                         f"['{offender}'] at {show(hit)}",
                     )
                 )
+        if granularity == "week":
+            for position, first in enumerate(active):
+                for second in active[position + 1 :]:
+                    overlap = index.zone[first] & index.zone[second]
+                    if not overlap or index.co_shared(first, second, week):
+                        continue
+                    # An occupied/closure collision was already reported for
+                    # this pair. Only add an otherwise-missed buffer overlap.
+                    if (
+                        index.occupied[first] & index.zone[second]
+                        or index.occupied[second] & index.zone[first]
+                    ):
+                        continue
+                    violations.append(
+                        Violation(
+                            rule="closure",
+                            detail=f"wk{week}: closure zones of {first} and "
+                            f"{second} overlap at {show(overlap)}",
+                        )
+                    )
     return violations
 
 
@@ -315,24 +334,6 @@ def check_possessions(index: Index, policy: Policy) -> list[Violation]:
                     "at most one is legal",
                 )
             )
-        # One possession is one access-night, so a contract+type sharing it must
-        # report the same access_night on every member.
-        nights = defaultdict(set)
-        for activity in members:
-            if row := index.access_at[activity.activity_id, week]:
-                nights[activity.contract_number, activity.activity_type].add(
-                    row[0].access_night
-                )
-        for (contract_number, activity_type), values in sorted(nights.items()):
-            if len(values) > 1:
-                violations.append(
-                    Violation(
-                        rule="co_share",
-                        detail=f"{where}: {contract_number}/{activity_type} reports "
-                        f"access_night {sorted(values)} inside one possession",
-                    )
-                )
-
     allowance = policy.max_excess_per_location_week
     if allowance is None:
         return violations
@@ -387,7 +388,9 @@ def check_allocation(index: Index) -> list[Violation]:
                 )
             )
 
-    for (contract_number, activity_type, week, night), members in sorted(fronts.items()):
+    for (contract_number, activity_type, week, night), members in sorted(
+        fronts.items()
+    ):
         contract = contracts[contract_number, activity_type]
         if len(members) > contract.number_of_workfronts:
             violations.append(

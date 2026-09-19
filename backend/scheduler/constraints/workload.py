@@ -23,7 +23,9 @@ def add_constraints(model, variables, instance, footprints, policy):
 
         for week in range(1, instance.horizon_weeks + 1):
             access = variables.access[activity.activity_id, week]
-            if instance.week_start(week) < activity.planned_start_date:
+            # The rule names the planned start *week*, not its first day. A
+            # midweek date still permits access in the week containing it.
+            if instance.week_end(week) < activity.planned_start_date:
                 model.add(access == 0)
 
         predecessor_id = activity.predecessor_activity_id
@@ -32,10 +34,6 @@ def add_constraints(model, variables, instance, footprints, policy):
         # Every predecessor access must finish before the successor starts.
         for successor_week in range(1, instance.horizon_weeks + 1):
             successor = variables.access[activity.activity_id, successor_week]
-            for predecessor_week in range(
-                successor_week, instance.horizon_weeks + 1
-            ):
-                predecessor = variables.access[
-                    predecessor_id, predecessor_week
-                ]
+            for predecessor_week in range(successor_week, instance.horizon_weeks + 1):
+                predecessor = variables.access[predecessor_id, predecessor_week]
                 model.add(successor + predecessor <= 1)

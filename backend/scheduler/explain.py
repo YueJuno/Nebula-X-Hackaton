@@ -131,7 +131,8 @@ def explain_delays(instance: Instance, schedule: Schedule) -> list[dict]:
             saturated = [
                 location_id
                 for location_id in footprint_of.get(activity.activity_id, [])
-                if len(usage.possessions[location_id, week]) >= supply.get(location_id, 0)
+                if len(usage.possessions[location_id, week])
+                >= supply.get(location_id, 0)
             ]
             if saturated:
                 factors["capacity"] += 1
@@ -166,7 +167,9 @@ def explain_delays(instance: Instance, schedule: Schedule) -> list[dict]:
                 "shortfall_with_eclo": with_eclo,
                 "missed_weeks": missed,
                 "blocking_factors": factors,
-                "primary_factor": "window" if shortfall else (ranked[0][0] if ranked else "none"),
+                "primary_factor": "window"
+                if shortfall
+                else (ranked[0][0] if ranked else "none"),
                 "hotspots": [
                     {"location_id": location_id, "weeks": sorted(set(weeks_hit))}
                     for location_id, weeks_hit in sorted(hotspots.items())
@@ -219,7 +222,9 @@ def summarize(
     where = ""
     if hotspots:
         busiest = max(hotspots.items(), key=lambda pair: len(pair[1]))
-        where = f" Tightest location: {busiest[0]} ({len(set(busiest[1]))} wks at supply)."
+        where = (
+            f" Tightest location: {busiest[0]} ({len(set(busiest[1]))} wks at supply)."
+        )
     return f"{activity_id} overruns by {overrun} days because {lead}.{where}"
 
 
@@ -252,7 +257,8 @@ def candidate_levers(
         weeks = row["window_shortfall"]
         levers.append(
             (
-                # Structural shortfalls dominate: nothing else can recover them.
+                # Only an earlier start can remove this activity's window
+                # shortfall. Global ranking still weighs all delayed work.
                 row["weighted_cost"] * (weeks + 1) * 10,
                 Lever(
                     kind="start_date",

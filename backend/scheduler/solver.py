@@ -3,7 +3,7 @@
 from ortools.sat.python import cp_model
 
 from scheduler.constraints import apply_constraints, missing_constraints
-from scheduler.objectives import set_objective
+from scheduler.objectives import SCORE_SCALE, set_objective
 from scheduler.policies import get_policy
 from scheduler.results import extract_schedule
 from scheduler.topology import calculate_footprints
@@ -14,15 +14,18 @@ def possession_group_limits(instance, policy):
     full_group_limit = maximum_groups(instance, policy)
     if policy.max_excess_per_location_week is not None:
         return [full_group_limit]
+    nominal_limit = max(location.supply_capacity for location in instance.locations)
     compact_limit = min(
         full_group_limit,
-        max(location.supply_capacity for location in instance.locations) + 8,
+        nominal_limit + 4,
     )
-    return (
-        [compact_limit]
-        if compact_limit == full_group_limit
-        else [compact_limit, full_group_limit]
-    )
+    return list(dict.fromkeys([nominal_limit, compact_limit, full_group_limit]))
+
+
+def _omitted_solution_penalty(instance, group_limit):
+    nominal_limit = max(location.supply_capacity for location in instance.locations)
+    minimum_excess = group_limit + 1 - nominal_limit
+    return 7 * SCORE_SCALE * minimum_excess
 
 
 def build_model(instance, scenario, max_groups=None, buffer_granularity="week"):
@@ -66,16 +69,26 @@ def solve(instance, scenario, time_limit_seconds=60, buffer_granularity="week"):
         )
         apply_constraints(model, variables, instance, footprints, policy)
         solver = cp_model.CpSolver()
-        solver.parameters.max_time_in_seconds = (
-            time_limit_seconds
-            if len(group_limits) == 1
-            else max(10, time_limit_seconds // len(group_limits))
-        )
+        solver.parameters.max_time_in_seconds = time_limit_seconds
         solver.parameters.num_search_workers = 8
         status = solver.solve(model)
         last_status = solver.status_name(status)
         if status in (cp_model.FEASIBLE, cp_model.OPTIMAL):
-            return extract_schedule(solver, variables, instance, status)
+            schedule = extract_schedule(solver, variables, instance, status)
+            full_domain = group_limit == group_limits[-1]
+            omitted_domain_cannot_improve = (
+                status == cp_model.OPTIMAL
+                and policy.score_excess
+                and solver.objective_value
+                <= _omitted_solution_penalty(instance, group_limit)
+            )
+            if status == cp_model.OPTIMAL and (
+                full_domain or omitted_domain_cannot_improve
+            ):
+                return schedule
+            # A restricted Scenario B domain can prove its own optimum without
+            # proving that buying more groups cannot improve the global score.
+            return schedule.model_copy(update={"solver_status": "FEASIBLE"})
         if index + 1 < len(group_limits):
             continue
     raise RuntimeError(f"No complete solution returned: {last_status}")

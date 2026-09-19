@@ -15,6 +15,7 @@ class Variables:
     night: dict = field(default_factory=dict)
     on_night: dict = field(default_factory=dict)
     possession: dict = field(default_factory=dict)
+    closure_group: dict = field(default_factory=dict)
     in_group: dict = field(default_factory=dict)
     group_used: dict = field(default_factory=dict)
     completion_week: dict = field(default_factory=dict)
@@ -25,7 +26,10 @@ class Variables:
 
 def maximum_groups(instance: Instance, policy: Policy) -> int:
     if policy.max_excess_per_location_week is not None:
-        return max(location.supply_capacity for location in instance.locations) + policy.max_excess_per_location_week
+        return (
+            max(location.supply_capacity for location in instance.locations)
+            + policy.max_excess_per_location_week
+        )
 
     # Scenario B may buy extra possessions. It can never need more groups at a
     # location than the number of activity accesses permitted in one week.
@@ -98,6 +102,23 @@ def create_variables(
                         model.new_bool_var(
                             f"in_group_{activity.activity_id}_{week}_{location}_{group}"
                         )
+                    )
+            footprint = footprints[activity.activity_id]
+            closure_locations = set(
+                footprint.occupied
+                + footprint.buffers
+                + footprint.mirrored
+                + footprint.cross_line
+            )
+            for location in closure_locations:
+                key = activity.activity_id, week, location
+                if key in variables.possession:
+                    variables.closure_group[key] = variables.possession[key]
+                else:
+                    variables.closure_group[key] = model.new_int_var(
+                        1,
+                        max_groups,
+                        f"closure_group_{activity.activity_id}_{week}_{location}",
                     )
     for location in instance.locations:
         for week in range(1, instance.horizon_weeks + 1):

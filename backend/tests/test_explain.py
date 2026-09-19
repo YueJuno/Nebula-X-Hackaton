@@ -56,11 +56,34 @@ def test_explanations_rank_by_weighted_cost(instance, schedule_a):
 
 
 def test_levers_are_proposed_only_where_evidence_exists(instance, schedule_a):
-    levers = candidate_levers(instance, explain_delays(instance, schedule_a), limit=6)
+    explanations = explain_delays(instance, schedule_a)
+    levers = candidate_levers(instance, explanations, limit=1000)
     assert levers, "a delayed schedule should propose at least one lever"
-    # Both delays are structural, so pulling the start dates leads the ranking.
-    assert {lever.target for lever in levers[:2]} == {"A036", "A059"}
-    assert all(lever.kind == "start_date" for lever in levers[:2])
+    # Both window shortfalls need earlier starts, but another high-cost delay
+    # may put its capacity remedy ahead of one of them in the global ranking.
+    proposed = {(lever.kind, lever.target) for lever in levers}
+    assert {("start_date", "A036"), ("start_date", "A059")} <= proposed
+
+    for lever in levers:
+        if lever.kind == "start_date":
+            assert any(
+                row["activity_id"] == lever.target and row["window_shortfall"]
+                for row in explanations
+            )
+        elif lever.kind in {"weekly_access", "workfronts"}:
+            factor = "allocation" if lever.kind == "weekly_access" else "workfront"
+            assert any(
+                f"{row['contract_number']}/{row['activity_type']}" == lever.target
+                and row["blocking_factors"][factor]
+                for row in explanations
+            )
+        else:
+            assert lever.kind == "supply"
+            assert any(
+                hotspot["location_id"] == lever.target
+                for row in explanations
+                for hotspot in row["hotspots"]
+            )
 
 
 def test_apply_lever_does_not_mutate_the_original(instance):
@@ -68,9 +91,10 @@ def test_apply_lever_does_not_mutate_the_original(instance):
     before = [c.number_of_maximum_access_per_week for c in instance.contracts]
     changed = apply_lever(instance, lever)
     assert [c.number_of_maximum_access_per_week for c in instance.contracts] == before
-    assert sum(c.number_of_maximum_access_per_week for c in changed.contracts) == sum(
-        before
-    ) + 1
+    assert (
+        sum(c.number_of_maximum_access_per_week for c in changed.contracts)
+        == sum(before) + 1
+    )
 
 
 def test_supply_and_start_date_levers_apply(instance):
@@ -94,9 +118,7 @@ def test_unknown_lever_kind_is_rejected(instance):
 def test_start_date_lever_recovers_the_structural_delay(instance, schedule_a):
     """The counterfactual has to back the diagnosis with a re-solve."""
     baseline = measure(instance, "A", schedule_a)
-    lever = Lever(
-        "start_date", "A036", "d", "c", magnitude=2
-    )
+    lever = Lever("start_date", "A036", "d", "c", magnitude=2)
     [result] = cheapest_unlocks(instance, "A", [lever], baseline, time_limit_seconds=90)
     assert result["solver_status"] in {"OPTIMAL", "FEASIBLE"}
     # The exact saving moves with the buffer reading; the direction must not.

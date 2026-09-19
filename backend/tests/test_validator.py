@@ -6,11 +6,13 @@ from pathlib import Path
 import pytest
 
 from scheduler.loader import load_directory
+from scheduler.rules import Index, check_closures
 from scheduler.submission import load_submission_directory
 from scheduler.validator import validate, validate_files
 
 DATA = Path(__file__).resolve().parents[2] / "01_data"
 OUTPUTS = Path(__file__).resolve().parents[2] / "04_solver_outputs"
+SAMPLE = Path(__file__).resolve().parents[2] / "03_submission_sample"
 
 
 @pytest.fixture(scope="module")
@@ -24,6 +26,36 @@ def submission(scenario):
 
 def rules_fired(report):
     return set(report["detail"]["violations_by_rule"])
+
+
+def test_week_checker_catches_buffer_overlap_without_worksite_intrusion():
+    index = Index(instance=None, submission=None, footprints={})
+    index.active[1] = ["A1", "A2"]
+    index.occupied = {"A1": {"L1"}, "A2": {"L3"}}
+    index.zone = {"A1": {"L2"}, "A2": {"L2"}}
+
+    strict = check_closures(index, "week")
+    assert len(strict) == 1
+    assert strict[0].rule == "closure"
+    assert "L2" in strict[0].detail
+    assert check_closures(index, "possession") == []
+
+
+def test_organizer_sample_accepts_location_specific_group_labels(instance):
+    payload = load_submission_directory(SAMPLE)
+    assert any(
+        len(
+            {
+                row.co_share_group
+                for row in payload.occupancy
+                if row.activity_id == access.activity_id and row.week == access.week
+            }
+        )
+        > 1
+        for access in payload.accesses
+    )
+    report = validate(instance, payload, "possession")
+    assert report["feasible"], report["detail"]["violations_by_rule"]
 
 
 @pytest.mark.parametrize("scenario", ["A", "B", "C"])
@@ -47,11 +79,11 @@ def test_soft_scores_match_the_solvers_own_accounting(instance, scenario):
 
 @pytest.mark.parametrize("scenario", ["A", "B", "C"])
 def test_published_outputs_break_only_the_known_rules(instance, scenario):
-    """Guards the fix: co_share must disappear, and nothing new may appear."""
+    """The generated outputs pass both supported buffer readings."""
     strict = validate(instance, submission(scenario), "week")
     loose = validate(instance, submission(scenario), "possession")
-    assert rules_fired(strict) <= {"closure", "co_share"}
-    assert rules_fired(loose) <= {"co_share"}
+    assert strict["feasible"], strict["detail"]["violations_by_rule"]
+    assert loose["feasible"], loose["detail"]["violations_by_rule"]
 
 
 def test_scenario_a_rejects_eclo(instance):
