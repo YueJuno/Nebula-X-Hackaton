@@ -11,9 +11,15 @@ const scenarios = [
   { id: "C", title: "Find the balance", detail: "Balance delays, extra access, and overnight extensions.", label: "Balanced planning", icon: "route" },
 ] as const;
 
+const bufferReadings = [
+  { id: "week", title: "Week-strict buffers", detail: "Conservative option. The schedule must pass buffer checks across the whole week.", label: "Recommended" },
+  { id: "possession", title: "Per-possession buffers", detail: "Assumes separate possessions use separate nights. May score better, but depends on that interpretation.", label: "Alternative" },
+] as const;
+
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [scenario, setScenario] = useState<string>("A");
+  const [granularity, setGranularity] = useState<"week" | "possession">("week");
   const [user, setUser] = useState<User | null>(null);
 
   const openAuth = () => window.dispatchEvent(new Event("auth:open"));
@@ -25,7 +31,7 @@ export default function App() {
         <a className="sidebar-brand" href="#top" onClick={() => setSidebarOpen(false)}><span className="brand-mark"><Icon name="train" size={24} /></span>OptiTrack</a>
         <button className="new-plan" onClick={() => { setScenario("A"); setSidebarOpen(false); if (!user) openAuth(); else document.getElementById("workspace")?.scrollIntoView({ behavior: "smooth" }); }}><Icon name="plus" />New plan<Icon name="arrow" size={16} /></button>
         <p className="nav-label">YOUR WORKSPACE</p>
-        <nav aria-label="Main navigation"><a className="nav-link active" href="#workspace" onClick={() => setSidebarOpen(false)}><Icon name="route" />Access planner</a><a className="nav-link" href="#scenario-heading" onClick={() => setSidebarOpen(false)}><Icon name="train" />Planning scenarios</a></nav>
+        <nav aria-label="Main navigation"><a className="nav-link active" href="#workspace" onClick={() => setSidebarOpen(false)}><Icon name="route" />Access planner</a><a className="nav-link" href="#scenario-heading" onClick={() => setSidebarOpen(false)}><Icon name="train" />Planning scenarios</a><a className="nav-link" href="#buffer-heading" onClick={() => setSidebarOpen(false)}><Icon name="route" />Buffer mode</a></nav>
         <div className="sidebar-context"><p>{user ? "Ready for your next run" : "Your network, in sync"}</p><span>{user ? "Upload a network or pick a saved dataset to start planning." : "Sign in to save datasets and manage your scheduling runs."}</span></div>
         <div className="sidebar-bottom"><div className="metro-line"><i /><i /><i /><i /></div><strong>A clearer path ahead.</strong><p>Built for the overnight window.</p></div>
       </aside>
@@ -34,7 +40,8 @@ export default function App() {
         <main className="shell">
           <section className="hero" aria-labelledby="hero-title"><RailGraphic /><p className="eyebrow">SMARTER RAIL ACCESS PLANNING</p><h1 id="hero-title">OptiTrack<span>.</span></h1><h2>Make every night count.</h2><p className="intro">Less time coordinating. More time on track.<br />Plan overnight work across your network, all in one place.</p></section>
           <section className="scenario-section" aria-labelledby="scenario-heading"><div className="section-heading"><h2 id="scenario-heading">How would you like to plan?</h2><span>Choose your approach</span></div><div className="scenarios" role="group" aria-label="Choose a scenario">{scenarios.map(item => <button key={item.id} className="scenario" aria-pressed={scenario === item.id} onClick={() => setScenario(item.id)}><div className="scenario-top"><Icon name={item.icon} /><span className="scenario-id">{item.id}</span></div><strong>{item.title}</strong><span>{item.detail}</span><span className="scenario-label">{item.label}</span></button>)}</div></section>
-          <div id="workspace"><PlannerPanel user={user} scenario={scenario} /></div>
+          <section className="scenario-section buffer-section" aria-labelledby="buffer-heading"><div className="section-heading"><h2 id="buffer-heading">Buffer rule interpretation</h2><span>Choose a safety model</span></div><div className="scenarios buffer-readings" role="group" aria-label="Choose a buffer reading">{bufferReadings.map(item => <button key={item.id} className="scenario" aria-pressed={granularity === item.id} onClick={() => setGranularity(item.id)}><strong>{item.title}</strong><span>{item.detail}</span><span className="scenario-label">{item.label}</span></button>)}</div><p className="note buffer-note">The official validator has not clarified whether separate possessions can use the same night. Week-strict passes both modes in our built-in checker.</p></section>
+          <div id="workspace"><PlannerPanel user={user} scenario={scenario} granularity={granularity} /></div>
           <footer className="workspace-footer"><Icon name="train" size={16} /><span>Better coordination. Smoother journeys.</span></footer>
         </main>
       </div>

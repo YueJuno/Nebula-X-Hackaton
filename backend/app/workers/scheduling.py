@@ -43,15 +43,16 @@ def process_next(engine, validator_command=None, time_limit_seconds=60) -> bool:
             return False
         run.status, run.started_at = "running", now
         dataset = db.get(Dataset, run.dataset_id)
-        run_id, payload, files, scenario = (
+        run_id, payload, files, scenario, granularity = (
             run.id,
             dataset.payload,
             dataset.files,
             run.scenario,
+            run.buffer_granularity or "week",
         )
     try:
         result = execute_run(
-            payload, files, scenario, validator_command, time_limit_seconds
+            payload, files, scenario, validator_command, time_limit_seconds, granularity
         )
     except Exception:  # noqa: BLE001 -- job boundary must persist unexpected failures too
         # Avoid writing uploaded data or connection credentials into user-facing errors.

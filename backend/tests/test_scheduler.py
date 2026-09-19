@@ -12,7 +12,7 @@ from scheduler.policies import get_policy
 from scheduler.results import Access, Schedule
 from scheduler.solver import solve
 from scheduler.topology import calculate_footprint, calculate_footprints
-from scheduler.validator import validate_submission
+from scheduler.validator import validate_files, validate_submission
 
 PUBLIC = Path(__file__).resolve().parents[2] / "01_data"
 
@@ -141,13 +141,17 @@ def test_public_scenario_a_schedule_obeys_core_rules(public_instance):
             assert len(groups) <= location_record.supply_capacity
 
 
-def test_run_solves_but_requires_reference_validation(public_instance):
+def test_run_solves_and_self_validates(public_instance):
     result = execute_run(public_instance.model_dump(mode="json"), {}, "C")
-    assert result["status"] == "needs_validation"
     assert result["schedule"] is not None and result["submission_zip"] is not None
     assert len(result["report"]["footprints"]) == 54
     assert result["report"]["missing_constraints"] == []
-    assert result["report"]["validation"]["status"] == "unavailable"
+    # Every run carries a built-in verdict; an external validator stays optional.
+    validation = result["report"]["validation"]
+    assert validation["status"] == "validated"
+    assert isinstance(validation["feasible"], bool)
+    assert "external_validation" not in result["report"]
+    assert result["status"] == ("completed" if validation["feasible"] else "needs_validation")
 
 
 def test_policy_and_priority_bands():
@@ -196,3 +200,40 @@ def test_export_shapes_dates_and_archive(public_instance):
 def test_validator_missing_is_not_feasible(tmp_path):
     report = validate_submission(None, tmp_path, tmp_path)
     assert report["status"] == "unavailable" and report["feasible"] is None
+
+
+@pytest.mark.parametrize("scenario", ["A", "B", "C"])
+def test_solver_output_passes_its_own_validator(public_instance, scenario):
+    """Rule 5 regression: one possession must never report two access_nights.
+
+    `co_share` breaches are unambiguous under either buffer reading, so the
+    solver's own export has to come back clean on that tag in every scenario.
+    """
+    schedule = solve(public_instance, scenario, 60)
+    exports = export_files(public_instance, schedule, scenario)
+    fired = {
+        granularity: set(
+            validate_files(public_instance, exports, granularity)["detail"][
+                "violations_by_rule"
+            ]
+        )
+        for granularity in ("week", "possession")
+    }
+    assert "co_share" not in fired["week"]
+    assert fired["possession"] == set()
+
+
+@pytest.mark.parametrize("scenario", ["A", "B", "C"])
+def test_week_strict_buffers_satisfy_both_readings(public_instance, scenario):
+    """Section 2.4 rule 3 is ambiguous, so the strict model must satisfy both.
+
+    A week-strict schedule is feasible under the possession reading too, which
+    is what makes it immune to however the official validator resolves it.
+    """
+    schedule = solve(public_instance, scenario, 120, "week")
+    exports = export_files(public_instance, schedule, scenario)
+    for granularity in ("week", "possession"):
+        report = validate_files(public_instance, exports, granularity)
+        assert report["feasible"], (
+            f"{scenario}/{granularity}: {report['detail']['violations_by_rule']}"
+        )
