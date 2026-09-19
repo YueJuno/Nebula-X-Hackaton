@@ -56,8 +56,17 @@ The earlier proposed `access_night` ↔ `co_share_group` equivalence was removed
 The challenge README describes the supplied sample as feasible, yet the sample
 has 11 local groups containing activities of the same contract/type with
 different `access_night` indices. Enforcing that equivalence would reject the
-organizer's own example. Weekly allocation and workfront checks remain in
-place; the two fields are not equated without official-validator evidence.
+organizer's own example. Section 2.6 agrees outright: `access_night` is "a
+local accounting index per contract+type+week, independent of location/sector".
+Weekly allocation and workfront checks remain in place; the two fields are not
+equated without official-validator evidence.
+
+It was removed from the validator first and from the CP model afterwards. The
+residual block in `constraints/possessions.py` still reified a `together` bool
+over `possession[..., occupied[0]]` for each activity, which compared labels at
+two *different* locations once the route anchor was dropped, so it constrained
+nothing meaningful while excluding legal solutions. Removing it left A/B/C
+objectives unchanged (131.6 / 50.0 / 44.5). Nothing now ties the two fields.
 
 Regression checks now cover route-local labels, location-aware week safety,
 the organizer sample under the possession reading, and A/B/C self-validation.
