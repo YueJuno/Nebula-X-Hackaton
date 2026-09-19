@@ -22,7 +22,11 @@ only. Treat every "OPEN" item as unresolved.
 - Git remote: GitHub `YueJuno/Nebula-X-Hackaton`. **Deliverable asks for GitLab.**
 - Public instance: 54 activities, 14 contracts, 76 locations, 30 weeks, horizon start 2027-01-04, 192 total accesses.
 
-Three workstreams landed today: (1) a built-in validator, (2) a rule-5 solver bug fix, (3) a counterfactual explainability engine. Plus (4) resolution of a spec ambiguity that changed the shipped solver default.
+Four workstreams landed today: (1) a built-in validator, (2) a retracted rule-5
+"fix" — the `access_night` ↔ `co_share_group` equivalence it enforced was wrong
+and has been removed from both the validator and the model (section 2),
+(3) a counterfactual explainability engine, (4) resolution of a spec ambiguity
+that changed the shipped solver default (section 3).
 
 ---
 
