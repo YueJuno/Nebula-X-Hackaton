@@ -92,6 +92,19 @@ Co-sharing exempts a pair under either reading.
 
 **Key asymmetry**: a week-strict schedule is feasible under **both** readings. A possession-strict schedule is feasible under only one. Feasibility is a mandatory gate; score is a margin.
 
+**Do not overclaim this.** `check_closures` returns `[]` under the `possession`
+reading by construction: location-local labels cannot identify which
+possessions coincide, so there is nothing to check. "Feasible under both
+readings" therefore means *verified* under `week` and *unverifiable* under
+`possession`, not independently confirmed twice. The claim to make out loud is
+that the schedule satisfies the strict reading, which implies the loose one.
+
+**Scenario B no longer proves optimality.** Under the stricter buffer rule B
+returns `FEASIBLE` at 50.0 and does not close the gap at a 600-second limit
+(measured). It was 40.0 `OPTIMAL` under the weaker pre-buffer-overlap rule. A
+and C still reach `OPTIMAL`. There is probably score to recover in B with
+better search (warm starts, hints, or a decomposition); nobody has tried.
+
 **DECISION (user-approved)**: ship week-strict, expose both in the app.
 
 **Implementation**:
@@ -196,7 +209,7 @@ New: `backend/tests/test_validator.py`, `backend/tests/test_explain.py`, and `ba
 | B | FEASIBLE | 187 | 50.0 | 0 | 10 | 0 | 0 / 0 / 0 |
 | C | OPTIMAL | 190 | 44.5 | 21 | 4 | 0 | 0 / 0 / 21 |
 
-All six checks pass: every scenario feasible under **both** `week` and `possession` in the built-in validator. No Priority-1 overrun anywhere.
+All six checks pass in the built-in validator. Note the caveat in section 3: the `possession` check is vacuous for buffers, so this is one real verdict and one trivially-satisfied one per scenario. No Priority-1 overrun anywhere. B is `FEASIBLE`, not `OPTIMAL` (section 3).
 
 ---
 
