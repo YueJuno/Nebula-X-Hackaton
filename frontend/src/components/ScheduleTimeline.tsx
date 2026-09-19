@@ -1,6 +1,7 @@
+import { memo } from "react";
 import type { Instance, Schedule } from "../types/scheduling";
 
-export default function ScheduleTimeline({ instance, schedule }: { instance: Instance; schedule: Schedule }) {
+function ScheduleTimeline({ instance, schedule }: { instance: Instance; schedule: Schedule }) {
   const weeks = Array.from({ length: Math.max(instance.horizon_weeks, ...schedule.accesses.map(a => a.week)) }, (_, index) => index + 1);
   const lookup = new Map(schedule.accesses.map(a => [`${a.activity_id}:${a.week}`, a]));
   return <div className="table-scroll"><table>
@@ -16,3 +17,5 @@ export default function ScheduleTimeline({ instance, schedule }: { instance: Ins
     </tr>)}</tbody>
   </table></div>;
 }
+
+export default memo(ScheduleTimeline);

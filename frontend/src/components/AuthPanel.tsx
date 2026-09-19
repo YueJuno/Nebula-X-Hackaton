@@ -3,7 +3,10 @@ import Icon from "./Icon";
 import { AuthApiError, authenticate, getCurrentUser } from "../api/auth";
 import type { User } from "../types/auth";
 
-export default function AuthPanel({ onUserChange }: { onUserChange: (user: User | null) => void }) {
+export default function AuthPanel({ onUserChange, onRestoringChange }: {
+  onUserChange: (user: User | null) => void;
+  onRestoringChange: (restoring: boolean) => void;
+}) {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,6 +18,7 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const submitting = useRef(false);
 
   useEffect(() => {
     if (open && !dialogRef.current?.open) dialogRef.current?.showModal();
@@ -22,12 +26,17 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
   }, [open]);
 
   useEffect(() => {
-    const show = () => { setMode("signin"); setOpen(true); };
+    const show = (event: Event) => {
+      if (submitting.current) return;
+      setMode((event as CustomEvent).detail === "signup" ? "signup" : "signin");
+      setError(""); setPassword(""); setSignupCode(""); setConfirmPassword(""); setOpen(true);
+    };
     window.addEventListener("auth:open", show);
     return () => window.removeEventListener("auth:open", show);
   }, []);
 
   useEffect(() => { onUserChange(user); }, [user, onUserChange]);
+  useEffect(() => { onRestoringChange(restoring); }, [restoring, onRestoringChange]);
 
   useEffect(() => {
     const expired = () => { setUser(null); setError("Your session expired. Please sign in again."); setOpen(true); };
@@ -74,10 +83,12 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting.current) return;
     if (mode === "signup" && password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
+    submitting.current = true;
     setBusy(true);
     setError("");
     try {
@@ -90,20 +101,20 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
       setOpen(false);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not complete authentication.");
-    } finally { setBusy(false); }
+    } finally { submitting.current = false; setBusy(false); }
   }
 
   return (
     <div className="account-control">
-      <button className={user ? "account-button" : "primary-button account-signin"} disabled={restoring} onClick={() => setOpen(true)}>
+      <button className={user ? "account-button" : "primary-button account-signin"} disabled={restoring} onClick={() => { if (!user) setMode("signin"); setOpen(true); }}>
         {user ? <span className="avatar">{user.email[0].toUpperCase()}</span> : <Icon name="user" size={16} />}
         {restoring ? "Loading…" : user ? "My account" : "Sign in"}
       </button>
-      <dialog ref={dialogRef} className="auth-dialog" aria-labelledby="auth-heading" onCancel={() => setOpen(false)} onClose={() => setOpen(false)}>
-      <button className="icon-button dialog-close" aria-label="Close account dialog" onClick={() => setOpen(false)}><Icon name="close" /></button>
+      <dialog ref={dialogRef} className="auth-dialog" aria-labelledby="auth-heading" onCancel={event => { if (busy) event.preventDefault(); else setOpen(false); }} onClose={() => setOpen(false)}>
+      <button className="icon-button dialog-close" disabled={busy} aria-label="Close account dialog" onClick={() => setOpen(false)}><Icon name="close" /></button>
       <div className="dialog-brand"><Icon name="train" size={26} /><span>OptiTrack</span></div>
       <h2 id="auth-heading">{user ? "Your account" : mode === "signup" ? "Create an account" : "Sign in"}</h2>
-      <p className="note">{user ? "Manage your planning account." : "Your next journey starts here."}</p>
+      <p className="note">{user ? "Your saved plans and schedules are linked to this account." : mode === "signup" ? "Create an account to save your plans." : "Sign in to continue."}</p>
       {restoring ? <p role="status">Checking your session…</p> : user ? (
         <div>
           <p role="status">Signed in as <strong>{user.email}</strong></p>
@@ -127,7 +138,7 @@ export default function AuthPanel({ onUserChange }: { onUserChange: (user: User 
             {mode === "signup" && <>
               <label>Confirm password<input type="password" autoComplete="new-password" required minLength={8}
                 value={confirmPassword} disabled={busy} onChange={event => setConfirmPassword(event.target.value)} /></label>
-              <p className="note">Use at least 8 characters. Passwords may contain at most 72 UTF-8 bytes.</p>
+              <p className="note">Use at least 8 characters.</p>
               <label>Signup code<input type="password" autoComplete="off" required maxLength={256} value={signupCode}
                 disabled={busy} onChange={event => setSignupCode(event.target.value)} /></label>
             </>}

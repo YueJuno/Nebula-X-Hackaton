@@ -1,6 +1,7 @@
+import { memo } from "react";
 import type { Footprint, Instance } from "../types/scheduling";
 
-export default function NetworkPreview({ instance, footprint }: { instance: Instance; footprint?: Footprint }) {
+function NetworkPreview({ instance, footprint }: { instance: Instance; footprint?: Footprint }) {
   return (
     <div className="network-scroll">
       <svg viewBox={`0 0 1000 ${instance.lines.length * 150 + 30}`} role="img" aria-label="Railway network; highlighted stations belong to the selected activity's occupied span">
@@ -25,3 +26,5 @@ export default function NetworkPreview({ instance, footprint }: { instance: Inst
     </div>
   );
 }
+
+export default memo(NetworkPreview);
