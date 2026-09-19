@@ -4,6 +4,7 @@ import type { User } from "../types/auth";
 import type { Capabilities, Dataset, Instance, Run } from "../types/scheduling";
 import NetworkPreview from "./NetworkPreview";
 import ScheduleTimeline from "./ScheduleTimeline";
+import Icon from "./Icon";
 
 export default function PlannerPanel({ user, scenario }: { user: User | null; scenario: string }) {
   const [capabilities, setCapabilities] = useState<Capabilities | null>(null);
@@ -87,18 +88,18 @@ export default function PlannerPanel({ user, scenario }: { user: User | null; sc
 
   return <section className="panel" aria-labelledby="planner-heading">
     <div className="panel-heading"><h2 id="planner-heading">Planning workspace</h2>
-      <button onClick={() => setRefresh(value => value + 1)} disabled={busy}>Refresh</button></div>
-    {capabilities && !capabilities.can_schedule && <p className="notice" role="status">
-      Data upload and model preparation are available. Scheduling awaits the railway constraints: {capabilities.missing_constraints.join(", ")}.
+      {user && <button onClick={() => setRefresh(value => value + 1)} disabled={busy}>Refresh</button>}</div>
+    {user && capabilities && !capabilities.can_schedule && <p className="notice" role="status">
+      You can upload and explore your network. Schedule generation is not available yet.
     </p>}
-    {!user ? <p>Sign in to upload datasets and save scheduling runs.</p> : <>
+    {!user ? <div className="upload-welcome"><span className="upload-icon"><Icon name="upload" size={25} /></span><h3>Start with your network.</h3><p>Bring your eight CSV files. We’ll help you plan the way forward.</p><button className="primary-button" onClick={() => window.dispatchEvent(new Event("auth:open"))}>Sign in to get started<Icon name="arrow" size={17} /></button><span className="upload-hint">CSV datasets · Network previews · Saved scheduling runs</span></div> : <>
       <form className="upload-form" onSubmit={upload}>
         <label>Dataset name<input value={name} maxLength={128} required disabled={busy} onChange={event => setName(event.target.value)} /></label>
-        <label>Eight instance CSVs<input key={`${user.id}:${datasets.length}`} type="file" accept=".csv" multiple required disabled={busy}
+        <label className="file-upload-zone"><span><Icon name="upload" /> Upload your eight instance CSVs</span><input key={`${user.id}:${datasets.length}`} type="file" accept=".csv" multiple required disabled={busy}
           onChange={event => setFiles(Array.from(event.target.files || []))} /></label>
         {files.length > 0 && <p>{files.length} files selected: {files.map(file => file.name).join(", ")}</p>}
         <details><summary>Required filenames</summary><ul>{capabilities?.required_files.map(file => <li key={file}>{file}</li>)}</ul></details>
-        <button type="submit" disabled={busy || files.length !== 8}>{busy ? "Please wait…" : "Validate and upload"}</button>
+        <button className="primary-button" type="submit" disabled={busy || files.length !== 8}>{busy ? "Please wait…" : "Validate and upload"}<Icon name="arrow" size={17} /></button>
       </form>
       {datasets.length > 0 && <div className="dataset-picker">
         <label>Saved dataset<select value={selected} disabled={busy} onChange={event => { setSelected(event.target.value); setActiveRun(null); }}>

@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.db.session import get_engine
 from app.models.scheduling import Dataset, Run
+from app.models.user import User  # noqa: F401 -- registers FK target in Base.metadata
 from app.services.scheduling import execute_run
 
 logger = logging.getLogger(__name__)
@@ -86,7 +87,7 @@ def main():
         except KeyboardInterrupt:
             break
         except Exception:  # noqa: BLE001 -- keep the worker alive across queue outages
-            logger.error("Worker cannot access the job queue; check database setup")
+            logger.exception("Worker cannot access or process the job queue")
             time.sleep(5)
 
 
